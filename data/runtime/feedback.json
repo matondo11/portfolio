@@ -1,0 +1,34 @@
+[
+  {
+    "id": "seed-1",
+    "name": "Maria Santos",
+    "rating": 5,
+    "comment": "Delivered the project ahead of schedule. The code quality was exceptional — clean architecture, well-documented, and easy to extend.",
+    "role": "CTO at TechHub Angola",
+    "createdAt": "2024-11-15T00:00:00.000Z"
+  },
+  {
+    "id": "seed-2",
+    "name": "João Ferreira",
+    "rating": 5,
+    "comment": "Outstanding full-stack work. The system handles thousands of concurrent users without breaking a sweat.",
+    "role": "Founder at Emprego360",
+    "createdAt": "2024-12-03T00:00:00.000Z"
+  },
+  {
+    "id": "seed-3",
+    "name": "Carla Mendes",
+    "rating": 4,
+    "comment": "Professional, communicative, and technically strong. Would hire again for our next product cycle.",
+    "role": "Product Manager at Visa Express",
+    "createdAt": "2025-01-22T00:00:00.000Z"
+  },
+  {
+    "id": "97f6f401-caa7-46fd-9747-1d2ccb01d377",
+    "name": "Matondo Domingos Bunga",
+    "rating": 5,
+    "comment": "yhrtttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt",
+    "role": "hgfggd",
+    "createdAt": "2026-04-21T00:27:14.349Z"
+  }
+]

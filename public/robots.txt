@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Allow: /admin
+Disallow: /api/
+Disallow: /*.json
+Disallow: /private/
+
+Sitemap: https://portfolio.com/sitemap.xml
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
