@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Send, Mail, MapPin, MessageSquare, CheckCircle2 } from "lucide-react";
 import SectionHeader from "@/components/SectionHeader";
-import { profile } from "@/lib/profile";
 
 const INITIAL = { name: "", email: "", message: "" };
 
@@ -33,34 +32,15 @@ export default function Contact() {
     }
 
     setLoading(true);
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          email: form.email.trim(),
-          message: form.message.trim(),
-        }),
-      });
-
-      const data = (await res.json()) as { error?: string };
-      if (!res.ok) {
-        setError(data.error ?? "Failed to send your message.");
-        return;
-      }
-
-      setSuccess(true);
-      setForm(INITIAL);
-    } catch {
-      setError("Failed to send your message.");
-    } finally {
-      setLoading(false);
-    }
+    // Simulate sending — replace with your email service (Resend, Nodemailer, etc.)
+    await new Promise((r) => setTimeout(r, 1200));
+    setLoading(false);
+    setSuccess(true);
+    setForm(INITIAL);
   };
 
   return (
-    <section id="contact" className="relative py-24 px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="relative py-24 px-6">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-2/30 to-transparent" />
       {/* Bottom glow */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-96 h-48 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
@@ -73,22 +53,20 @@ export default function Contact() {
           centered
         />
 
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Info */}
-          <div className="md:col-span-1 lg:col-span-2 flex flex-col gap-5">
+          <div className="lg:col-span-2 flex flex-col gap-5">
             {[
-              profile.contactEmail
-                ? {
-                    icon: <Mail size={18} />,
-                    label: "Email",
-                    value: profile.contactEmail,
-                    href: `mailto:${profile.contactEmail}`,
-                  }
-                : null,
+              {
+                icon: <Mail size={18} />,
+                label: "Email",
+                value: "hello@example.com",
+                href: "mailto:hello@example.com",
+              },
               {
                 icon: <MapPin size={18} />,
                 label: "Location",
-                value: profile.location,
+                value: "Luanda, Angola",
                 href: null,
               },
               {
@@ -97,29 +75,27 @@ export default function Contact() {
                 value: "Within 24 hours",
                 href: null,
               },
-            ]
-              .filter(Boolean)
-              .map((item) => (
+            ].map((item) => (
               <div
-                key={item!.label}
+                key={item.label}
                 className="flex items-start gap-4 p-5 rounded-xl glass border border-border"
               >
                 <span className="p-2.5 rounded-lg bg-accent/10 text-accent">
-                  {item!.icon}
+                  {item.icon}
                 </span>
                 <div>
                   <p className="text-xs text-muted uppercase tracking-wider font-medium mb-1">
-                    {item!.label}
+                    {item.label}
                   </p>
-                  {item!.href ? (
+                  {item.href ? (
                     <a
-                      href={item!.href}
+                      href={item.href}
                       className="text-sm text-text-primary hover:text-accent transition-colors"
                     >
-                      {item!.value}
+                      {item.value}
                     </a>
                   ) : (
-                    <p className="text-sm text-text-primary">{item!.value}</p>
+                    <p className="text-sm text-text-primary">{item.value}</p>
                   )}
                 </div>
               </div>
@@ -127,13 +103,13 @@ export default function Contact() {
           </div>
 
           {/* Form */}
-          <div className="md:col-span-1 lg:col-span-3">
+          <div className="lg:col-span-3">
             {success ? (
               <div className="flex flex-col items-center justify-center h-full gap-4 p-10 rounded-2xl glass border border-emerald-400/30 text-center animate-fade-up">
                 <CheckCircle2 size={40} className="text-emerald-400" />
                 <h3 className="text-lg font-semibold text-text-primary">Message sent!</h3>
                 <p className="text-text-secondary text-sm">
-                  Thanks for reaching out. I&apos;ll get back to you within 24 hours.
+                  Thanks for reaching out. I'll get back to you within 24 hours.
                 </p>
                 <button
                   onClick={() => setSuccess(false)}
@@ -162,8 +138,6 @@ export default function Contact() {
                       value={form.name}
                       onChange={handleChange}
                       placeholder="Your name"
-                      required
-                      autoComplete="name"
                       className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-text-primary placeholder:text-muted text-sm focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-colors"
                     />
                   </div>
@@ -181,8 +155,6 @@ export default function Contact() {
                       value={form.email}
                       onChange={handleChange}
                       placeholder="you@email.com"
-                      required
-                      autoComplete="email"
                       className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-text-primary placeholder:text-muted text-sm focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-colors"
                     />
                   </div>
@@ -202,8 +174,6 @@ export default function Contact() {
                     value={form.message}
                     onChange={handleChange}
                     placeholder="Tell me about your project, timeline, and budget..."
-                    required
-                    autoComplete="off"
                     className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-text-primary placeholder:text-muted text-sm focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-colors resize-none"
                   />
                 </div>
@@ -239,8 +209,8 @@ export default function Contact() {
 
       {/* Footer */}
       <div className="max-w-6xl mx-auto mt-20 pt-8 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted">
-        <p>&copy; {new Date().getFullYear()} Dev Portfolio. Built with Next.js & Tailwind CSS.</p>
-        <p>Designed and developed in Luanda, Angola.</p>
+        <p>© {new Date().getFullYear()} Dev Portfolio. Built with Next.js & TailwindCSS.</p>
+        <p>Designed & developed in Luanda, Angola 🇦🇴</p>
       </div>
     </section>
   );

@@ -1,31 +1,30 @@
 import { Skill } from "@/types";
 
-// HARD SKILLS - Technical
-export const hardSkills: Skill[] = [
+export const skills: Skill[] = [
+  // Mastered
   { name: "React", level: "mastered" },
   { name: "Next.js", level: "mastered" },
+  { name: "TypeScript", level: "mastered" },
   { name: "Node.js", level: "mastered" },
   { name: "NestJS", level: "mastered" },
-  { name: "TypeScript", level: "mastered" },
   { name: "PostgreSQL", level: "mastered" },
-  { name: "MongoDB", level: "mastered" },
-  { name: "Prisma", level: "mastered" },
+  { name: "Prisma ORM", level: "mastered" },
+  { name: "TailwindCSS", level: "mastered" },
+  { name: "REST APIs", level: "mastered" },
+  { name: "Git & GitHub", level: "mastered" },
+
+  // Learning
   { name: "Docker", level: "learning" },
-  { name: "Python", level: "learning" },
-  { name: "Figma", level: "mastered" },
-];
+  { name: "GraphQL", level: "learning" },
+  { name: "Redis", level: "learning" },
+  { name: "AWS (EC2/S3)", level: "learning" },
+  { name: "Kubernetes", level: "learning" },
+  { name: "Python / FastAPI", level: "learning" },
 
-// SOFT SKILLS - Professional  
-export const softSkills: Skill[] = [
-  { name: "Problem Solving", level: "mastered" },
-  { name: "Communication", level: "mastered" },
-  { name: "Continuous Learning", level: "mastered" },
-  { name: "Adaptability", level: "mastered" },
-  { name: "Teamwork", level: "mastered" },
-];
-
-// Legacy export
-export const skills: Skill[] = [
-  ...hardSkills,
-  ...softSkills
+  // Planned
+  { name: "Rust", level: "planned" },
+  { name: "Go", level: "planned" },
+  { name: "Machine Learning", level: "planned" },
+  { name: "Web3 / Solidity", level: "planned" },
+  { name: "React Native", level: "planned" },
 ];

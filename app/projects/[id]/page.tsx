@@ -1,34 +1,27 @@
 import { notFound } from "next/navigation";
+import { getProjectById, projects } from "@/data/projects";
 import ProjectDetail from "@/components/ProjectDetail";
-import { getProjectByIdentifier } from "@/lib/projects";
 
-export const revalidate = 300;
-
-interface ProjectPageProps {
-  params: Promise<{ id: string }>;
+interface Props {
+  params: { id: string };
 }
 
-export async function generateMetadata({ params }: ProjectPageProps) {
-  const { id } = await params;
-  const project = await getProjectByIdentifier(id);
+// Static paths for all projects
+export function generateStaticParams() {
+  return projects.map((p) => ({ id: p.id }));
+}
 
-  if (!project) {
-    return { title: "Project Not Found | Portfolio" };
-  }
-
+export async function generateMetadata({ params }: Props) {
+  const project = getProjectById(params.id);
+  if (!project) return { title: "Project Not Found" };
   return {
     title: `${project.title} | Portfolio`,
     description: project.description,
   };
 }
 
-export default async function ProjectPage({ params }: ProjectPageProps) {
-  const { id } = await params;
-  const project = await getProjectByIdentifier(id);
-
-  if (!project) {
-    notFound();
-  }
-
+export default function ProjectPage({ params }: Props) {
+  const project = getProjectById(params.id);
+  if (!project) notFound();
   return <ProjectDetail project={project} />;
 }
