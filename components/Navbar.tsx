@@ -40,7 +40,7 @@ export default function Navbar() {
           <span className="w-7 h-7 rounded-lg bg-accent/10 border border-accent/30 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
             <Code2 size={14} className="text-accent" />
           </span>
-          <span className="gradient-text">dev.portfolio</span>
+          <span className="gradient-text">MDB.portfolio</span>
         </Link>
 
         {/* Desktop links */}
@@ -60,7 +60,7 @@ export default function Navbar() {
         {/* CTA */}
         <a
           href="#contact"
-          className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-accent/10 border border-accent/30 text-accent hover:bg-accent hover:text-white transition-all duration-200"
+          className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg  border border-accent/30 text-accent bg-accent text-white transition-all duration-200"
         >
           Hire me
         </a>
@@ -91,7 +91,7 @@ export default function Navbar() {
           <a
             href="#contact"
             onClick={() => setOpen(false)}
-            className="block mt-2 px-4 py-3 text-sm font-medium text-center rounded-lg bg-accent/10 border border-accent/30 text-accent"
+            className="block mt-2 px-4 py-3 text-sm font-medium text-center rounded-lg bg-accent border border-accent/30 text-white"
           >
             Hire me
           </a>
