@@ -38,7 +38,6 @@ export default function Hero() {
             speed={100}
             eraseSpeed={50}
             typingDelay={1000}
-            displayTextRenderer={(text) => text}
           />
         </motion.div>
         <motion.div
