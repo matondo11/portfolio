@@ -1,54 +1,45 @@
 import mongoose from "mongoose";
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
 
-// Importar inline a função de hash
-function hashPassword(password) {
-  return bcryptjs.hashSync(password, 10);
-}
+const MONGODB_URI = "mongodb+srv://Matondo:junilsonn@cluster0.uogv3ss.mongodb.net/?appName=Cluster0";
 
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/portfolio";
-
-// Schema de usuário
+// Schema
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
 
+// Evita redefinir model em hot reload
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 async function createAdminUser() {
   try {
     await mongoose.connect(MONGODB_URI);
-    console.log("✅ Conectado ao MongoDB");
+    console.log("✅ MongoDB conectado");
 
-    // Verifica se admin já existe
-    let admin = await User.findOne({ username: "admin" });
+    const exists = await User.findOne({ username: "admin" });
 
-    if (admin) {
-      console.log("✅ Usuário admin já existe");
+    if (exists) {
+      console.log("⚠️ Admin já existe");
       process.exit(0);
     }
 
-    // Cria novo admin
-    const password = process.argv[2] || "admin123";
+    const password = "Catarin@2";
+    const hashed = await bcrypt.hash(password, 10);
 
-    admin = new User({
+    await User.create({
       username: "admin",
-      password: hashPassword(password),
+      password: hashed,
     });
 
-    await admin.save();
-
-    console.log("✅ Usuário admin criado com sucesso!");
-    console.log(`Username: admin`);
-    console.log(`Password: ${password}`);
-    console.log("⚠️  Mude a senha após o primeiro login!");
+    console.log("🔥 Admin criado!");
+    console.log("Username: admin");
+    console.log("Password:", password);
 
     process.exit(0);
-  } catch (error) {
-    console.error("❌ Erro ao criar usuário admin:", error.message);
+  } catch (err) {
+    console.error("❌ ERRO:", err.message);
     process.exit(1);
   }
 }

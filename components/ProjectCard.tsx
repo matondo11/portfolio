@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Project } from '@/types';
-import { ExternalLink, Github, Figma } from 'lucide-react';
+import { FaGithub, FaExternalLinkAlt, FaFigma } from 'react-icons/fa';
 
 interface ProjectCardProps {
   project: Project;
@@ -52,19 +52,19 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         <div className="flex gap-2">
           {project.github && (
             <a href={project.github} className="text-gray-400 hover:text-white">
-              <Github className="w-5 h-5" />
+              <FaGithub className="w-5 h-5" />
             </a>
           )}
           {project.demo && (
             <a href={project.demo} className="text-gray-400 hover:text-white">
-              <ExternalLink className="w-5 h-5" />
+              <FaExternalLinkAlt className="w-5 h-5" />
             </a>
           )}
           {project.figma && (
             <a href={project.figma} className="text-gray-400 hover:text-white">
-              <Figma className="w-5 h-5" />
+              <FaFigma className="w-5 h-5" />
             </a>
-          )}
+          )}Fa
         </div>
       </div>
     </motion.div>
