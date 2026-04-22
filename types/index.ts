@@ -1,44 +1,33 @@
 // ─── Project ──────────────────────────────────────────────────────────────────
 
-export type ProjectStatus = "production" | "in-progress" | "paused";
+export type ProjectStatus = "production" | "in-progress" | "idea";
 
-export type ProjectTag =
-  | "React"
-  | "Next.js"
-  | "Node.js"
-  | "NestJS"
-  | "Fullstack"
-  | "TypeScript"
-  | "PostgreSQL"
-  | "Prisma"
-  | "TailwindCSS"
-  | "MongoDB"
-  | "Socket.io"
-  | "REST API"
-  | "WebSockets"
-  | "Python"
-  | "FastAPI";
+export type Platform = "web" | "ios" | "android";
 
 export interface Project {
-  id: string;
+  _id?: string;
   title: string;
   description: string;
-  longDescription: string;
-  technologies: ProjectTag[];
+  image: string;
+  video?: string;
+  technologies: string[];
+  github?: string;
+  demo?: string;
+  figma?: string;
+  platform: Platform[];
   status: ProjectStatus;
-  views: number;
-  filterTags: FilterTag[];
-  problem: string;
-  solution: string;
-  results: string[];
-  liveUrl?: string;
-  githubUrl?: string;
-  gradient: string;
+  featured?: boolean;
+  createdAt: Date;
 }
 
-// ─── Filter ───────────────────────────────────────────────────────────────────
+// ─── User ─────────────────────────────────────────────────────────────────────
 
-export type FilterTag = "React" | "Next.js" | "Node.js" | "NestJS" | "Fullstack";
+export interface User {
+  _id?: string;
+  username: string;
+  password: string;
+  createdAt: Date;
+}
 
 // ─── Feedback ─────────────────────────────────────────────────────────────────
 
@@ -56,16 +45,6 @@ export interface FeedbackInput {
   rating: number;
   comment: string;
   role: string;
-}
-
-// ─── Roadmap ──────────────────────────────────────────────────────────────────
-
-export type SkillLevel = "mastered" | "learning" | "planned";
-
-export interface Skill {
-  name: string;
-  level: SkillLevel;
-  icon?: string;
 }
 
 // ─── View Counter ─────────────────────────────────────────────────────────────

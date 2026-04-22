@@ -1,23 +1,12 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Dev Portfolio | Full-Stack Engineer",
-  description:
-    "Full-stack developer specialising in Next.js, NestJS, and scalable web systems. Based in Luanda, Angola.",
-  keywords: ["full-stack", "Next.js", "NestJS", "React", "Node.js", "portfolio"],
+  title: 'Portfolio - Desenvolvedor Full Stack',
+  description: 'Portfólio moderno de um desenvolvedor Full Stack focado em React, Next.js e Node.js.',
 };
 
 export default function RootLayout({
@@ -26,13 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-bg text-text-primary`}
-      >
-        <Navbar />
-        <main>{children}</main>
-      </body>
+    <html lang="pt-br">
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }

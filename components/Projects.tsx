@@ -1,46 +1,58 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { projects } from "@/data/projects";
-import ProjectCard from "@/components/ProjectCard";
-import ProjectFilter from "@/components/ProjectFilter";
-import { FilterTag } from "@/types";
-import SectionHeader from "@/components/SectionHeader";
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Project } from '@/types';
+import ProjectCard from './ProjectCard';
 
 export default function Projects() {
-  const [active, setActive] = useState<FilterTag | "All">("All");
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [filter, setFilter] = useState<string>('all');
 
-  const filtered =
-    active === "All"
-      ? projects
-      : projects.filter((p) => p.filterTags.includes(active));
+  useEffect(() => {
+    fetch('/api/projects')
+      .then(res => res.json())
+      .then(setProjects);
+  }, []);
+
+  const filteredProjects = filter === 'all' 
+    ? projects 
+    : projects.filter(p => p.technologies.includes(filter));
+
+  const technologies = Array.from(new Set(projects.flatMap(p => p.technologies)));
 
   return (
-    <section id="projects" className="relative py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <SectionHeader
-          eyebrow="Portfolio"
-          title="Selected Projects"
-          description="A curated selection of production systems, tools, and experiments I've shipped."
-        />
+    <section className="py-20 px-4 max-w-6xl mx-auto">
+      <motion.h2
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        className="text-4xl font-bold text-center mb-12"
+      >
+        Projetos
+      </motion.h2>
+      
+      <div className="flex flex-wrap justify-center gap-2 mb-12">
+        <button
+          onClick={() => setFilter('all')}
+          className={`px-4 py-2 rounded ${filter === 'all' ? 'bg-blue-600' : 'bg-gray-700'}`}
+        >
+          Todos
+        </button>
+        {technologies.map(tech => (
+          <button
+            key={tech}
+            onClick={() => setFilter(tech)}
+            className={`px-4 py-2 rounded ${filter === tech ? 'bg-blue-600' : 'bg-gray-700'}`}
+          >
+            {tech}
+          </button>
+        ))}
+      </div>
 
-        {/* Filter */}
-        <div className="mt-8 mb-10">
-          <ProjectFilter active={active} onChange={setActive} />
-        </div>
-
-        {/* Grid */}
-        {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map((project, i) => (
-              <ProjectCard key={project.id} project={project} index={i} />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-text-secondary">
-            <p className="text-lg">No projects found for this filter.</p>
-          </div>
-        )}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredProjects.map((project, index) => (
+          <ProjectCard key={project._id} project={project} index={index} />
+        ))}
       </div>
     </section>
   );

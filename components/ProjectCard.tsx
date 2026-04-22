@@ -1,97 +1,72 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Eye, ArrowUpRight, Circle } from "lucide-react";
-import clsx from "clsx";
-import { Project } from "@/types";
+import { motion } from 'framer-motion';
+import { Project } from '@/types';
+import { ExternalLink, Github, Figma } from 'lucide-react';
 
-const statusConfig = {
-  production: { label: "Production", color: "text-emerald-400", dot: "bg-emerald-400" },
-  "in-progress": { label: "In Progress", color: "text-amber-400", dot: "bg-amber-400" },
-  paused: { label: "Paused", color: "text-muted", dot: "bg-muted" },
-};
-
-interface Props {
+interface ProjectCardProps {
   project: Project;
   index: number;
 }
 
-export default function ProjectCard({ project, index }: Props) {
-  const [views, setViews] = useState(project.views);
-  const status = statusConfig[project.status];
-
-  useEffect(() => {
-    // Fetch current view count on mount
-    fetch(`/api/views?projectId=${project.id}`)
-      .then((r) => r.json())
-      .then((d) => setViews(d.count ?? 0))
-      .catch(() => {});
-  }, [project.id]);
+export default function ProjectCard({ project, index }: ProjectCardProps) {
+  const statusColors = {
+    production: 'bg-green-500',
+    'in-progress': 'bg-yellow-500',
+    idea: 'bg-gray-500',
+  };
 
   return (
-    <Link
-      href={`/projects/${project.id}`}
-      className="group relative flex flex-col rounded-2xl glass border border-border overflow-hidden hover:border-accent/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-glow animate-fade-up"
-      style={{ animationDelay: `${index * 0.08}s` }}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1 }}
+      className="bg-gray-800 rounded-lg overflow-hidden hover:shadow-2xl transition-shadow"
     >
-      {/* Gradient top accent */}
-      <div className={clsx("h-1 w-full bg-gradient-to-r", project.gradient)} />
-
-      {/* Card glow on hover */}
-      <div
-        className={clsx(
-          "absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none",
-          project.gradient
-        )}
-      />
-
-      <div className="relative z-10 p-6 flex flex-col gap-4 h-full">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-lg font-semibold text-text-primary group-hover:text-white transition-colors">
-            {project.title}
-          </h3>
-          <ArrowUpRight
-            size={18}
-            className="text-muted group-hover:text-accent transition-colors shrink-0 mt-0.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200"
+      <div className="relative">
+        <img src={project.image} alt={project.title} className="w-full h-48 object-cover" />
+        {project.video && (
+          <video
+            src={project.video}
+            className="w-full h-48 object-cover absolute top-0 left-0 opacity-0 hover:opacity-100 transition-opacity"
+            muted
+            loop
+            autoPlay
           />
-        </div>
-
-        {/* Description */}
-        <p className="text-sm text-text-secondary leading-relaxed flex-1">
-          {project.description}
-        </p>
-
-        {/* Technologies */}
-        <div className="flex flex-wrap gap-1.5">
-          {project.technologies.slice(0, 5).map((tech) => (
-            <span
-              key={tech}
-              className="px-2.5 py-1 text-xs rounded-md bg-surface border border-border/60 text-text-secondary font-mono"
-            >
+        )}
+        <div className={`absolute top-2 right-2 w-3 h-3 rounded-full ${statusColors[project.status]}`} />
+      </div>
+      
+      <div className="p-6">
+        <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+        <p className="text-gray-300 mb-4">{project.description}</p>
+        
+        <div className="flex flex-wrap gap-2 mb-4">
+          {project.technologies.map(tech => (
+            <span key={tech} className="bg-blue-600 px-2 py-1 rounded text-sm">
               {tech}
             </span>
           ))}
-          {project.technologies.length > 5 && (
-            <span className="px-2.5 py-1 text-xs rounded-md bg-surface border border-border/60 text-muted font-mono">
-              +{project.technologies.length - 5}
-            </span>
+        </div>
+        
+        <div className="flex gap-2">
+          {project.github && (
+            <a href={project.github} className="text-gray-400 hover:text-white">
+              <Github className="w-5 h-5" />
+            </a>
+          )}
+          {project.demo && (
+            <a href={project.demo} className="text-gray-400 hover:text-white">
+              <ExternalLink className="w-5 h-5" />
+            </a>
+          )}
+          {project.figma && (
+            <a href={project.figma} className="text-gray-400 hover:text-white">
+              <Figma className="w-5 h-5" />
+            </a>
           )}
         </div>
-
-        {/* Footer */}
-        <div className="flex items-center justify-between pt-2 border-t border-border/60">
-          <div className="flex items-center gap-1.5">
-            <span className={clsx("w-1.5 h-1.5 rounded-full animate-pulse", status.dot)} />
-            <span className={clsx("text-xs font-medium", status.color)}>{status.label}</span>
-          </div>
-          <div className="flex items-center gap-1.5 text-muted text-xs">
-            <Eye size={13} />
-            <span>{views.toLocaleString()} views</span>
-          </div>
-        </div>
       </div>
-    </Link>
+    </motion.div>
   );
 }
