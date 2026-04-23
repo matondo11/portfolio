@@ -8,7 +8,7 @@ interface Props {
 
 // Static paths for all projects
 export function generateStaticParams() {
-  return projects.map((p) => ({ id: p.id }));
+  return projects.map((p) => ({ id: p.id || p._id || "" }));
 }
 
 export async function generateMetadata({ params }: Props) {

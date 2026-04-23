@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio - Desenvolvedor Full Stack
 
-## Getting Started
+Portfólio moderno e profissional construído com Next.js 16, TypeScript, Tailwind CSS e Framer Motion. Inclui animações suaves, design responsivo e otimização para produção.
 
-First, run the development server:
+## 🚀 Tecnologias Utilizadas
 
+- **Framework**: Next.js 16 (App Router)
+- **Linguagem**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **Animações**: Framer Motion
+- **Ícones**: React Icons, Lucide React
+- **Banco de Dados**: MongoDB
+- **Armazenamento de Imagens**: Cloudinary
+- **PWA**: Next.js PWA
+
+## 📋 Pré-requisitos
+
+- Node.js 18+
+- npm ou yarn
+- Conta no MongoDB Atlas
+- Conta no Cloudinary (opcional)
+
+## 🛠️ Instalação
+
+1. Clone o repositório:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/seu-usuario/portfolio.git
+cd portfolio
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Instale as dependências:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Configure as variáveis de ambiente:
+```bash
+cp .env.example .env
+# Edite o .env com suas chaves
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Execute o servidor de desenvolvimento:
+```bash
+npm run dev
+```
 
-## Learn More
+Abra [http://localhost:3000](http://localhost:3000) no navegador.
 
-To learn more about Next.js, take a look at the following resources:
+## 📦 Build para Produção
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+npm run start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🚀 Hospedagem
 
-## Deploy on Vercel
+### Vercel (Recomendado)
+1. Conecte seu repositório no [Vercel](https://vercel.com)
+2. Configure as variáveis de ambiente
+3. Deploy automático
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Outras Opções
+- **Netlify**: Suporte para Next.js
+- **Railway**: Boa integração com MongoDB
+- **Heroku**: Configuração manual necessária
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🎨 Recursos
+
+- ✅ Design responsivo (mobile-first)
+- ✅ Animações suaves com Framer Motion
+- ✅ Efeito glass no navbar
+- ✅ Ícones de tecnologias na hero
+- ✅ Otimização de imagens
+- ✅ PWA pronto
+- ✅ SEO otimizado
+- ✅ Performance 60fps
+
+## 📁 Estrutura do Projeto
+
+```
+portfolio/
+├── app/                    # Next.js App Router
+├── components/             # Componentes React
+├── data/                   # Dados estáticos
+├── lib/                    # Utilitários
+├── public/                 # Assets estáticos
+└── types/                  # Tipos TypeScript
+```
+
+## 🔧 Scripts Disponíveis
+
+- `npm run dev` - Servidor de desenvolvimento
+- `npm run build` - Build para produção
+- `npm run start` - Servidor de produção
+- `npm run lint` - Verificação de código
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT.

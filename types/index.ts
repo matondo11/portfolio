@@ -5,6 +5,7 @@ export type ProjectStatus = "production" | "in-progress" | "idea";
 export type Platform = "web" | "ios" | "android";
 
 export interface Project {
+  id?: string;
   _id?: string;
   title: string;
   description: string;

@@ -28,19 +28,34 @@ export default function Testimonials() {
 
   const fetchFeedback = () => {
     setLoading(true);
+
     fetch("/api/feedback")
       .then((r) => r.json())
-      .then((d) => setFeedback(d.feedback ?? []))
-      .catch(() => {})
+      .then((d) => {
+        // 🔒 proteção total contra qualquer formato errado
+        if (Array.isArray(d)) {
+          setFeedback(d);
+        } else if (Array.isArray(d?.feedback)) {
+          setFeedback(d.feedback);
+        } else {
+          setFeedback([]);
+        }
+      })
+      .catch(() => {
+        setFeedback([]);
+      })
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
     fetchFeedback();
-    // Re-fetch when a new feedback is submitted
     window.addEventListener("feedback-submitted", fetchFeedback);
-    return () => window.removeEventListener("feedback-submitted", fetchFeedback);
+    return () =>
+      window.removeEventListener("feedback-submitted", fetchFeedback);
   }, []);
+
+  // 🔒 proteção extra no render
+  const safeFeedback = Array.isArray(feedback) ? feedback : [];
 
   return (
     <section id="testimonials" className="relative py-24 px-6 overflow-hidden">
@@ -62,34 +77,35 @@ export default function Testimonials() {
               />
             ))}
           </div>
-        ) : feedback.length === 0 ? (
+        ) : safeFeedback.length === 0 ? (
           <div className="mt-12 text-center text-text-secondary py-12">
             <p>No testimonials yet. Be the first to leave feedback!</p>
           </div>
         ) : (
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {feedback.map((fb, i) => (
+            {safeFeedback.map((fb, i) => (
               <div
-                key={fb.id}
+                key={fb.id || i} // fallback evita crash se id vier undefined
                 className="group relative flex flex-col gap-4 p-6 rounded-2xl glass border border-border hover:border-accent-2/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-purple animate-fade-up"
                 style={{ animationDelay: `${i * 0.1}s` }}
               >
-                {/* Quote icon */}
                 <Quote
                   size={20}
                   className="text-accent-2/30 group-hover:text-accent-2/50 transition-colors"
                 />
 
-                {/* Comment */}
                 <p className="text-sm text-text-secondary leading-relaxed flex-1">
                   &ldquo;{fb.comment}&rdquo;
                 </p>
 
-                {/* Footer */}
                 <div className="flex items-end justify-between gap-3 pt-3 border-t border-border/60">
                   <div>
-                    <p className="text-sm font-semibold text-text-primary">{fb.name}</p>
-                    <p className="text-xs text-muted mt-0.5">{fb.role}</p>
+                    <p className="text-sm font-semibold text-text-primary">
+                      {fb.name}
+                    </p>
+                    <p className="text-xs text-muted mt-0.5">
+                      {fb.role}
+                    </p>
                   </div>
                   <StarRating rating={fb.rating} />
                 </div>

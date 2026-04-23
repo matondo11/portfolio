@@ -3,6 +3,8 @@ import About from '@/components/About';
 import Services from '@/components/Services';
 import Projects from '@/components/Projects';
 import Skills from '@/components/Skills';
+import Testimonials from '@/components/Testimonials';
+import Roadmap from '@/components/Roadmap';
 import Contact from '@/components/Contact';
 import Navbar from '@/components/Navbar';
 
@@ -13,7 +15,11 @@ export default function Home() {
       <Hero/>
       <About />
       <Services />
-    
+      <Skills />
+      <Projects />
+      <Testimonials />
+      <Roadmap />
+      <Contact />
     </main>
   );
 }

@@ -1,28 +1,24 @@
 "use client";
 
 import { ArrowRight, Download } from "lucide-react";
-import { FaGithub, FaLinkedin,  FaNodeJs,  } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaReact, FaNodeJs } from "react-icons/fa";
+import { SiNextdotjs, SiNestjs, SiTypescript } from "react-icons/si";
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { SiNestjs, SiNextdotjs, SiTypescript } from "react-icons/si";
-import { GrReactjs } from "react-icons/gr";
-import { IoLogoJavascript } from "react-icons/io5";
-
-
 
 
 const badges = [
-  {nome:"Next.js", icon: <SiNextdotjs/>},
-  {nome:"Nest.js",icon: <SiNestjs/>},
-  {nome:"Typescript",icon: <SiTypescript/>},
-  {nome:"React",icon: <GrReactjs/>},
-  {nome:"Javascript",icon: <IoLogoJavascript/>},
-  {nome:"Node.js",icon: <FaNodeJs/>},
+  { name: "Next.js", icon: SiNextdotjs },
+  { name: "NestJS", icon: SiNestjs },
+  { name: "React", icon: FaReact },
+  { name: "Node.js", icon: FaNodeJs },
+  { name: "TypeScript", icon: SiTypescript },
 ];
 
 export default function Hero() {
   return (
-    <section className="min-h-screen flex-wrap flex items-center justify-center bg-gradient-to-br from-gray-900 to-black p-10">
+    <section className="min-h-screen flex-wrap flex items-center justify-center bg-linear-to-br from-gray-900 to-black p-10">
 
       {/* Grid background */}
       <div
@@ -68,15 +64,16 @@ export default function Hero() {
 
         {/* Tech badges */}
         <div
-        className="flex justify-center m-2.5"
-        
+          className="flex flex-wrap items-center justify-center gap-2 mb-10 animate-fade-up"
+          style={{ animationDelay: "0.3s" }}
         >
           {badges.map((b) => (
             <span
-              key={b.nome}
-              className=""
+              key={b.name}
+              className="flex items-center gap-2 px-3 py-1 text-xs font-mono rounded-md bg-surface border border-border text-text-secondary"
             >
-              {b.icon}
+              <b.icon size={16} />
+              {b.name}
             </span>
           ))}
         </div>
@@ -159,7 +156,7 @@ export default function Hero() {
 
 
       {/* Bottom fade */}
-      <div className="absolute bottom-0 inset-x-0 h-max bg-gradient-to-t from-bg to-transpa rent pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-max bg-linear-to-t from-bg to-transparent pointer-events-none" />
     </section>
   );
 }

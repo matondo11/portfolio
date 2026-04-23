@@ -24,6 +24,9 @@ module.exports = {
         glow: "0 0 40px rgba(59, 130, 246, 0.2)",
         "glow-purple": "0 0 40px rgba(139, 92, 246, 0.2)",
       },
+      backdropBlur: {
+        xs: '2px',
+      },
     },
   },
   plugins: [],

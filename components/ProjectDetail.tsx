@@ -6,12 +6,12 @@ import {
   ArrowLeft,
   Eye,
   ExternalLink,
-  Github,
   CheckCircle2,
   Lightbulb,
   Wrench,
   BarChart3,
 } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 import clsx from "clsx";
 import { Project } from "@/types";
 
@@ -102,7 +102,7 @@ export default function ProjectDetail({ project }: Props) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 rounded-lg glass border border-border text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
                 >
-                  <Github size={14} />
+                  <FaGithub size={14} />
                   Source Code
                 </a>
               )}

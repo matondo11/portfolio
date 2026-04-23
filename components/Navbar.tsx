@@ -60,7 +60,7 @@ export default function Navbar() {
         {/* CTA */}
         <a
           href="#contact"
-          className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg  border border-accent/30 text-accent bg-accent text-white transition-all duration-200"
+          className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-accent border border-accent/30 text-white transition-all duration-200"
         >
           Hire me
         </a>
