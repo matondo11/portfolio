@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { Project } from '@/types';
 import { FaGithub, FaExternalLinkAlt, FaFigma } from 'react-icons/fa';
 
@@ -24,7 +25,13 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
       className="bg-gray-800 rounded-lg overflow-hidden hover:shadow-2xl transition-shadow"
     >
       <div className="relative">
-        <img src={project.image} alt={project.title} className="w-full h-48 object-cover" />
+        {project.image ? (
+          <img src={project.image} alt={project.title} className="w-full h-48 object-cover" />
+        ) : (
+          <div className="w-full h-48 bg-gray-700 flex items-center justify-center text-gray-400">
+            Sem imagem disponível
+          </div>
+        )}
         {project.video && (
           <video
             src={project.video}
@@ -49,23 +56,30 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
           ))}
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2 mb-4">
           {project.github && (
-            <a href={project.github} className="text-gray-400 hover:text-white">
+            <a href={project.github} className="text-gray-400 hover:text-white" target="_blank" rel="noreferrer">
               <FaGithub className="w-5 h-5" />
             </a>
           )}
           {project.demo && (
-            <a href={project.demo} className="text-gray-400 hover:text-white">
+            <a href={project.demo} className="text-gray-400 hover:text-white" target="_blank" rel="noreferrer">
               <FaExternalLinkAlt className="w-5 h-5" />
             </a>
           )}
           {project.figma && (
-            <a href={project.figma} className="text-gray-400 hover:text-white">
+            <a href={project.figma} className="text-gray-400 hover:text-white" target="_blank" rel="noreferrer">
               <FaFigma className="w-5 h-5" />
             </a>
-          )}Fa
+          )}
         </div>
+        
+        <Link
+          href={`/projects/${project.id ?? project._id}`}
+          className="inline-flex items-center justify-center w-full px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent/90 transition-colors"
+        >
+          Ver detalhes
+        </Link>
       </div>
     </motion.div>
   );

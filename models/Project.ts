@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IProject extends Document {
   title: string;
   description: string;
-  image: string;
+  image?: string;
   video?: string;
   technologies: string[];
   github?: string;
@@ -18,9 +18,9 @@ export interface IProject extends Document {
 const ProjectSchema: Schema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  image: { type: String, required: true },
+  image: { type: String, required: false, default: '' },
   video: { type: String },
-  technologies: [{ type: String }],
+  technologies: [{ type: String, default: [] }],
   github: { type: String },
   demo: { type: String },
   figma: { type: String },

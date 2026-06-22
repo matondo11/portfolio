@@ -10,16 +10,43 @@ export default function Projects() {
   const [filter, setFilter] = useState<string>('all');
 
   useEffect(() => {
-    fetch('/api/projects')
-      .then(res => res.json())
-      .then(setProjects);
+    let mounted = true;
+    async function load() {
+      try {
+        const res = await fetch('/api/projects');
+        const data = await res.json();
+        if (!mounted) return;
+        if (Array.isArray(data)) {
+          setProjects(data);
+        } else if (data && Array.isArray((data as any).projects)) {
+          // some APIs return { projects: [...] }
+          setProjects((data as any).projects);
+        } else {
+          // defensive fallback
+          console.warn('Unexpected /api/projects response:', data);
+          setProjects([]);
+        }
+      } catch (err) {
+        console.error('Failed to load projects', err);
+        setProjects([]);
+      }
+    }
+
+    load();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  const filteredProjects = filter === 'all' 
-    ? projects 
-    : projects.filter(p => p.technologies.includes(filter));
+  const safeProjects = Array.isArray(projects) ? projects : [];
+  const filteredProjects =
+    filter === 'all'
+      ? safeProjects
+      : safeProjects.filter((p) => (p.technologies || []).includes(filter));
 
-  const technologies = Array.from(new Set(projects.flatMap(p => p.technologies)));
+  const technologies = Array.from(
+    new Set(safeProjects.flatMap((p) => (Array.isArray(p.technologies) ? p.technologies : [])))
+  );
 
   return (
     <section className="py-20 px-4 max-w-6xl mx-auto">
@@ -30,7 +57,7 @@ export default function Projects() {
       >
         Projetos
       </motion.h2>
-      
+
       <div className="flex flex-wrap justify-center gap-2 mb-12">
         <button
           onClick={() => setFilter('all')}
@@ -38,7 +65,7 @@ export default function Projects() {
         >
           Todos
         </button>
-        {technologies.map(tech => (
+        {technologies.map((tech) => (
           <button
             key={tech}
             onClick={() => setFilter(tech)}
@@ -51,7 +78,7 @@ export default function Projects() {
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredProjects.map((project, index) => (
-          <ProjectCard key={project._id} project={project} index={index} />
+          <ProjectCard key={project._id ?? project.id ?? index} project={project} index={index} />
         ))}
       </div>
     </section>

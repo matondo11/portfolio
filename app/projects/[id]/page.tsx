@@ -2,9 +2,9 @@ import { notFound } from "next/navigation";
 import { getProjectById, projects } from "@/data/projects";
 import ProjectDetail from "@/components/ProjectDetail";
 
-interface Props {
-  params: { id: string };
-}
+type Props = {
+  params: Promise<{ id: string }>;
+};
 
 // Static paths for all projects
 export function generateStaticParams() {
@@ -12,7 +12,8 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const project = getProjectById(params.id);
+  const { id } = await params;
+  const project = getProjectById(id);
   if (!project) return { title: "Project Not Found" };
   return {
     title: `${project.title} | Portfolio`,
@@ -20,8 +21,9 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default function ProjectPage({ params }: Props) {
-  const project = getProjectById(params.id);
+export default async function ProjectPage({ params }: Props) {
+  const { id } = await params;
+  const project = getProjectById(id);
   if (!project) notFound();
   return <ProjectDetail project={project} />;
 }

@@ -18,6 +18,7 @@ import { Project } from "@/types";
 const statusConfig = {
   production: { label: "Production", color: "text-emerald-400 border-emerald-400/30 bg-emerald-400/10", dot: "bg-emerald-400" },
   "in-progress": { label: "In Progress", color: "text-amber-400 border-amber-400/30 bg-amber-400/10", dot: "bg-amber-400" },
+  idea: { label: "Idea", color: "text-slate-400 border-slate-400/30 bg-slate-400/10", dot: "bg-slate-400" },
   paused: { label: "Paused", color: "text-muted border-border bg-surface", dot: "bg-muted" },
 };
 
@@ -153,12 +154,15 @@ export default function ProjectDetail({ project }: Props) {
             Results & Impact
           </h2>
           <ul className="space-y-3">
-            {project.results.map((r, i) => (
+            {project.results?.map((r, i) => (
               <li key={i} className="flex items-start gap-3">
                 <CheckCircle2 size={16} className="text-emerald-400 mt-0.5 shrink-0" />
                 <span className="text-text-secondary text-sm leading-relaxed">{r}</span>
               </li>
             ))}
+            {!project.results?.length && (
+              <li className="text-text-secondary text-sm">Nenhum resultado disponível.</li>
+            )}
           </ul>
         </div>
       </div>

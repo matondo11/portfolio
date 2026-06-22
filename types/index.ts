@@ -3,22 +3,37 @@
 export type ProjectStatus = "production" | "in-progress" | "idea";
 
 export type Platform = "web" | "ios" | "android";
+export type FilterTag = string;
+
+export interface Skill {
+  name: string;
+  level: "mastered" | "learning" | "planned";
+}
 
 export interface Project {
   id?: string;
   _id?: string;
   title: string;
   description: string;
-  image: string;
+  image?: string;
   video?: string;
   technologies: string[];
   github?: string;
+  githubUrl?: string;
   demo?: string;
   figma?: string;
-  platform: Platform[];
+  platform?: Platform[];
   status: ProjectStatus;
   featured?: boolean;
-  createdAt: Date;
+  createdAt?: Date;
+  gradient?: string;
+  longDescription?: string;
+  problem?: string;
+  solution?: string;
+  results?: string[];
+  liveUrl?: string;
+  filterTags?: string[];
+  views?: number;
 }
 
 // ─── User ─────────────────────────────────────────────────────────────────────

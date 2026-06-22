@@ -13,7 +13,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
     return NextResponse.json(project);
   } catch (error) {
-    return NextResponse.json({ error: 'Erro ao atualizar projeto' }, { status: 500 });
+    console.error('PUT /api/projects/[id] error:', error);
+    return NextResponse.json({ error: (error as any)?.message || 'Erro ao atualizar projeto' }, { status: 500 });
   }
 }
 
@@ -27,6 +28,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
     return NextResponse.json({ message: 'Projeto deletado' });
   } catch (error) {
-    return NextResponse.json({ error: 'Erro ao deletar projeto' }, { status: 500 });
+    console.error('DELETE /api/projects/[id] error:', error);
+    return NextResponse.json({ error: (error as any)?.message || 'Erro ao deletar projeto' }, { status: 500 });
   }
 }

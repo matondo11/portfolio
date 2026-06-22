@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-const MONGODB_URI = "mongodb+srv://Matondo:junilsonn@cluster0.uogv3ss.mongodb.net/?appName=Cluster0";
-
+const MONGODB_URI = "mongodb+srv://mdb:Catarin%402@portifolio.t8xuzg8.mongodb.net/?appName=portifolio"
 // Schema
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },

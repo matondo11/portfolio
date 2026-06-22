@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
     const token = generateToken({ userId: user._id });
     return NextResponse.json({ token });
   } catch (error) {
+    console.error('Login error:', error);
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }

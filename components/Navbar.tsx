@@ -6,10 +6,12 @@ import { Menu, X, Code2 } from "lucide-react";
 import clsx from "clsx";
 
 const links = [
-  { href: "#projects", label: "Projects" },
-  { href: "#roadmap", label: "Roadmap" },
-  { href: "#testimonials", label: "Testimonials" },
-  { href: "#contact", label: "Contact" },
+  { href: "/", label: "Home" },
+  { href: "/projects", label: "Projetos" },
+  { href: "/admin", label: "Admin" },
+  { href: "/#roadmap", label: "Roadmap" },
+  { href: "/#testimonials", label: "Depoimentos" },
+  { href: "/#contact", label: "Contato" },
 ];
 
 export default function Navbar() {
@@ -46,20 +48,20 @@ export default function Navbar() {
         {/* Desktop links */}
         <ul className="hidden md:flex items-center gap-1">
           {links.map((l) => (
-            <li key={l.href}>
-              <a
+            <li key={`${l.href}-${l.label}`}>
+              <Link
                 href={l.href}
                 className="px-4 py-2 text-sm text-text-secondary hover:text-text-primary rounded-lg hover:bg-surface transition-all duration-200"
               >
                 {l.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
 
         {/* CTA */}
         <a
-          href="#contact"
+          href="/#contact"
           className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-accent border border-accent/30 text-white transition-all duration-200"
         >
           Hire me
@@ -79,14 +81,14 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden glass border-t border-border/60 px-6 py-4 space-y-1">
           {links.map((l) => (
-            <a
-              key={l.href}
+            <Link
+              key={`${l.href}-${l.label}`}
               href={l.href}
               onClick={() => setOpen(false)}
               className="block px-4 py-3 text-sm text-text-secondary hover:text-text-primary hover:bg-surface rounded-lg transition-colors"
             >
               {l.label}
-            </a>
+            </Link>
           ))}
           <a
             href="#contact"
