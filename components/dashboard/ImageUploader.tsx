@@ -51,7 +51,10 @@ export default function ImageUploader({ value, onChange, label }: ImageUploaderP
       const form = new FormData();
       form.append('file', new File([blob], file.name, { type: 'image/jpeg' }));
 
-      const res = await fetch('/api/upload', { method: 'POST', body: form });
+      const token = localStorage.getItem('token');
+      const headers = new Headers();
+      if (token) headers.set('Authorization', `Bearer ${token}`);
+      const res = await fetch('/api/upload', { method: 'POST', headers, body: form });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || 'Upload failed');
       setPreview(data.url);

@@ -68,6 +68,17 @@ export interface Profile {
   };
 }
 
+export interface TimelineItem {
+  _id?: string;
+  category: 'experience' | 'education';
+  title: string;
+  subtitle?: string;
+  date?: string;
+  content?: string;
+  order?: number;
+  createdAt?: string | Date;
+}
+
 // ─── User ─────────────────────────────────────────────────────────────────────
 
 export interface User {

@@ -56,7 +56,10 @@ export default function ServiceManager() {
   const handleDelete = async (id: string) => {
     if (!confirm('Excluir este serviço?')) return;
     try {
-      const res = await fetch(`/api/services/${id}`, { method: 'DELETE' });
+      const token = localStorage.getItem('token');
+      const headers = new Headers();
+      if (token) headers.set('Authorization', `Bearer ${token}`);
+      const res = await fetch(`/api/services/${id}`, { method: 'DELETE', headers });
       if (!res.ok) throw new Error('Falha ao excluir');
       refresh();
     } catch (err) {

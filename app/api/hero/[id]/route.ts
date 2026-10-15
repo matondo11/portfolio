@@ -1,20 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import HeroConfig from '@/models/HeroConfig';
-import { verifyToken } from '@/lib/auth';
-
-function getToken(request: NextRequest) {
-  const auth = request.headers.get('authorization');
-  if (!auth) return null;
-  const parts = auth.split(' ');
-  return parts.length === 2 ? parts[1] : null;
-}
+import { requireAuth } from '@/lib/auth';
 
 export async function PUT(request: NextRequest) {
   try {
     if (!process.env.MONGODB_URI) return NextResponse.json({ error: 'DB não configurado' }, { status: 500 });
-    const token = getToken(request);
-    if (!token || !verifyToken(token)) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    const auth = requireAuth(request);
+    if (!auth.ok) return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
 
     await dbConnect();
     const { searchParams } = new URL(request.url);
@@ -31,8 +24,8 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     if (!process.env.MONGODB_URI) return NextResponse.json({ error: 'DB não configurado' }, { status: 500 });
-    const token = getToken(request);
-    if (!token || !verifyToken(token)) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    const auth = requireAuth(request);
+    if (!auth.ok) return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
 
     await dbConnect();
     const { searchParams } = new URL(request.url);

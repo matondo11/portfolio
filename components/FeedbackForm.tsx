@@ -60,9 +60,9 @@ export default function FeedbackForm() {
 
       <div className="max-w-2xl mx-auto">
         <SectionHeader
-          eyebrow="Feedback"
-          title="Leave a testimonial"
-          description="Worked with me? I'd love to hear your experience."
+          eyebrow="Depoimento"
+          title="Compartilhe sua experiência"
+          description="Já trabalhamos juntos? Seu depoimento será analisado antes de ser publicado."
           centered
         />
 
@@ -70,16 +70,16 @@ export default function FeedbackForm() {
           <div className="mt-10 flex flex-col items-center gap-4 p-10 rounded-2xl glass border border-emerald-400/30 text-center animate-fade-up">
             <CheckCircle2 size={40} className="text-emerald-400" />
             <h3 className="text-lg font-semibold text-text-primary">
-              Thank you for your feedback!
+              Obrigado pelo depoimento!
             </h3>
             <p className="text-text-secondary text-sm">
-              Your testimonial has been submitted and is now visible in the testimonials section.
+              Seu depoimento foi enviado e ficará pendente até a aprovação pelo painel administrativo.
             </p>
             <button
               onClick={() => setSuccess(false)}
               className="mt-2 px-5 py-2 rounded-lg text-sm text-accent border border-accent/30 hover:bg-accent/10 transition-colors"
             >
-              Submit another
+              Enviar outro
             </button>
           </div>
         ) : (
@@ -90,7 +90,7 @@ export default function FeedbackForm() {
             {/* Star rating */}
             <div>
               <label className="block text-xs text-text-secondary mb-2 font-medium uppercase tracking-wider">
-                Rating
+                Avaliação
               </label>
               <div
                 className="flex gap-1"
@@ -124,7 +124,7 @@ export default function FeedbackForm() {
                 htmlFor="name"
                 className="block text-xs text-text-secondary mb-2 font-medium uppercase tracking-wider"
               >
-                Full Name
+                Nome
               </label>
               <input
                 id="name"
@@ -132,7 +132,7 @@ export default function FeedbackForm() {
                 type="text"
                 value={form.name}
                 onChange={handleChange}
-                placeholder="Maria Santos"
+                placeholder="Seu nome"
                 className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-text-primary placeholder:text-muted text-sm focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-colors"
               />
             </div>
@@ -143,7 +143,7 @@ export default function FeedbackForm() {
                 htmlFor="role"
                 className="block text-xs text-text-secondary mb-2 font-medium uppercase tracking-wider"
               >
-                Role / Company
+                Cargo / Organização
               </label>
               <input
                 id="role"
@@ -151,7 +151,7 @@ export default function FeedbackForm() {
                 type="text"
                 value={form.role}
                 onChange={handleChange}
-                placeholder="CTO at Startup"
+                placeholder="Cargo ou organização"
                 className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-text-primary placeholder:text-muted text-sm focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-colors"
               />
             </div>
@@ -162,7 +162,7 @@ export default function FeedbackForm() {
                 htmlFor="comment"
                 className="block text-xs text-text-secondary mb-2 font-medium uppercase tracking-wider"
               >
-                Your Feedback
+                Depoimento
               </label>
               <textarea
                 id="comment"
@@ -170,7 +170,7 @@ export default function FeedbackForm() {
                 rows={4}
                 value={form.comment}
                 onChange={handleChange}
-                placeholder="Tell me about your experience working together..."
+                placeholder="Conte como foi nossa experiência de trabalho..."
                 className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-text-primary placeholder:text-muted text-sm focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-colors resize-none"
               />
             </div>
@@ -189,12 +189,12 @@ export default function FeedbackForm() {
               {loading ? (
                 <>
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Submitting...
+                  Enviando...
                 </>
               ) : (
                 <>
                   <Send size={15} />
-                  Submit Feedback
+                  Enviar depoimento
                 </>
               )}
             </button>

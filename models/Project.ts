@@ -11,6 +11,13 @@ export interface IProject extends Document {
   demo?: string;
   liveUrl?: string;
   figma?: string;
+  longDescription?: string;
+  problem?: string;
+  solution?: string;
+  results: string[];
+  filterTags: string[];
+  gradient?: string;
+  views?: number;
   platform: string[];
   status: 'production' | 'in-progress' | 'idea';
   featured?: boolean;
@@ -29,6 +36,13 @@ const ProjectSchema: Schema = new Schema({
   demo: { type: String, default: '' },
   liveUrl: { type: String, default: '' },
   figma: { type: String, default: '' },
+  longDescription: { type: String, default: '' },
+  problem: { type: String, default: '' },
+  solution: { type: String, default: '' },
+  results: [{ type: String }],
+  filterTags: [{ type: String }],
+  gradient: { type: String, default: '' },
+  views: { type: Number, default: 0 },
   platform: [{ type: String, enum: ['web', 'ios', 'android'] }],
   status: { type: String, enum: ['production', 'in-progress', 'idea'], required: true },
   featured: { type: Boolean, default: false },

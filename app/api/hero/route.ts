@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import HeroConfig from '@/models/HeroConfig';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET() {
   try {
@@ -28,6 +29,11 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = requireAuth(request);
+    if (!auth.ok) {
+      return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
+    }
+
     if (!process.env.MONGODB_URI) return NextResponse.json({ error: 'DB não configurado' }, { status: 500 });
     await dbConnect();
     const data = await request.json();

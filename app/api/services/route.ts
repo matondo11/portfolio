@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Service from '@/models/Service';
 import { services as fallbackServices } from '@/data/services';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET() {
   try {
@@ -19,18 +20,26 @@ export async function GET() {
     );
   } catch (error) {
     console.error('GET /api/services error:', error);
-    return NextResponse.json(fallbackServices);
+    return NextResponse.json({ error: (error as any)?.message || 'Erro ao buscar serviços' }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = requireAuth(request);
+    if (!auth.ok) {
+      return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
+    }
+
     if (!process.env.MONGODB_URI) {
       return NextResponse.json({ error: 'Banco de dados não configurado' }, { status: 500 });
     }
 
     await dbConnect();
     const data = await request.json();
+    if (!data.title?.trim() || !data.description?.trim() || !data.icon?.trim()) {
+      return NextResponse.json({ error: 'Título, descrição e ícone são obrigatórios' }, { status: 400 });
+    }
     const service = new Service(data);
     await service.save();
     return NextResponse.json(service, { status: 201 });

@@ -15,6 +15,12 @@ const defaultProficiency = {
   planned: 50,
 };
 
+const categoryLabels = {
+  mastered: 'Dominadas',
+  learning: 'Em aprendizagem',
+  planned: 'Planejadas',
+} as const;
+
 export default function Skills() {
   const { skills, loading } = useSkills();
 
@@ -50,7 +56,7 @@ export default function Skills() {
                 transition={{ delay: categoryIndex * 0.15 }}
                 className="mb-12"
               >
-                <h3 className="text-2xl font-semibold mb-6">{category.label}</h3>
+                <h3 className="text-2xl font-semibold mb-6">{categoryLabels[category.value]}</h3>
                 <div className="space-y-4">
                   {categorySkills.map((skill, index) => {
                     const proficiency = skill.proficiency ?? defaultProficiency[skill.level];

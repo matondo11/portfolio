@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { Skill } from '@/types';
-import { skills as defaultSkills } from '@/data/skills';
 
 export function useSkills() {
-  const [skills, setSkills] = useState<Skill[]>(defaultSkills);
+  const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +26,7 @@ export function useSkills() {
       } catch (err) {
         if (mounted) {
           setError((err as Error)?.message || 'Erro ao carregar habilidades');
-          setSkills(defaultSkills);
+          setSkills([]);
         }
       } finally {
         if (mounted) {

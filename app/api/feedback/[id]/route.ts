@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Feedback from '@/models/Feedback';
+import { requireAuth } from '@/lib/auth';
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const auth = requireAuth(request);
+    if (!auth.ok) {
+      return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
+    }
+
     const { id } = await params;
     const body = await request.json();
 
@@ -33,6 +39,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const auth = requireAuth(request);
+    if (!auth.ok) {
+      return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
+    }
+
     const { id } = await params;
     await dbConnect();
     const entry = await Feedback.findByIdAndDelete(id);

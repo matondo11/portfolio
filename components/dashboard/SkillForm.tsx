@@ -35,9 +35,12 @@ export default function SkillForm({ initial = null, onSaved, onCancel }: Props) 
     try {
       const payload = { name, level, proficiency };
       const url = initial?._id ? `/api/skills/${initial._id}` : '/api/skills';
+      const token = localStorage.getItem('token');
+      const headers = new Headers({ 'Content-Type': 'application/json' });
+      if (token) headers.set('Authorization', `Bearer ${token}`);
       const res = await fetch(url, {
         method: mode === 'update' ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(payload),
       });
       const data = await res.json();

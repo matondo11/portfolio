@@ -1,27 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import TimelineItem from '@/models/TimelineItem';
-import { verifyToken } from '@/lib/auth';
+import { requireAuth } from '@/lib/auth';
 
-function getToken(request: NextRequest) {
-  const auth = request.headers.get('authorization');
-  if (!auth) return null;
-  const parts = auth.split(' ');
-  return parts.length === 2 ? parts[1] : null;
-}
-
-export async function PUT(request: NextRequest) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     if (!process.env.MONGODB_URI) return NextResponse.json({ error: 'DB não configurado' }, { status: 500 });
 
-    const token = getToken(request);
-    if (!token || !verifyToken(token)) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    const auth = requireAuth(request);
+    if (!auth.ok) return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
 
     await dbConnect();
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
+    const { id } = await params;
     const payload = await request.json();
-    const updated = await TimelineItem.findByIdAndUpdate(id, payload, { new: true });
+    if (payload.category && !['experience', 'education'].includes(payload.category)) {
+      return NextResponse.json({ error: 'Categoria inválida' }, { status: 400 });
+    }
+    const updated = await TimelineItem.findByIdAndUpdate(id, payload, { new: true, runValidators: true });
+    if (!updated) return NextResponse.json({ error: 'Registro não encontrado' }, { status: 404 });
     return NextResponse.json(updated);
   } catch (error) {
     console.error('PUT /api/timeline/[id] error:', error);
@@ -29,17 +25,17 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     if (!process.env.MONGODB_URI) return NextResponse.json({ error: 'DB não configurado' }, { status: 500 });
 
-    const token = getToken(request);
-    if (!token || !verifyToken(token)) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    const auth = requireAuth(request);
+    if (!auth.ok) return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
 
     await dbConnect();
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-    await TimelineItem.findByIdAndDelete(id);
+    const { id } = await params;
+    const deleted = await TimelineItem.findByIdAndDelete(id);
+    if (!deleted) return NextResponse.json({ error: 'Registro não encontrado' }, { status: 404 });
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error('DELETE /api/timeline/[id] error:', error);

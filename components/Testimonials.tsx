@@ -63,9 +63,9 @@ export default function Testimonials() {
 
       <div className="max-w-6xl mx-auto">
         <SectionHeader
-          eyebrow="Testimonials"
-          title="What people say"
-          description="Feedback from clients and collaborators I've worked with."
+          eyebrow="Depoimentos"
+          title="O que dizem sobre o trabalho"
+          description="Comentários de clientes e colaboradores."
         />
 
         {loading ? (
@@ -77,13 +77,13 @@ export default function Testimonials() {
               />
             ))}
           </div>
-        ) : safeFeedback.filter((fb) => fb.approved ?? true).length === 0 ? (
+        ) : safeFeedback.length === 0 ? (
           <div className="mt-12 text-center text-text-secondary py-12">
-            <p>No testimonials yet. Be the first to leave feedback!</p>
+            <p>Ainda não há depoimentos publicados.</p>
           </div>
         ) : (
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {safeFeedback.filter((fb) => fb.approved ?? true).map((fb, i) => (
+            {safeFeedback.map((fb, i) => (
               <div
                 key={fb.id || i} // fallback evita crash se id vier undefined
                 className="group relative flex flex-col gap-4 p-6 rounded-2xl glass border border-border hover:border-accent-2/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-glow-purple animate-fade-up"

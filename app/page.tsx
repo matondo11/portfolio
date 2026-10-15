@@ -7,6 +7,9 @@ import { useProfile } from "@/components/hooks/useProfile";
 import { useProjects } from "@/components/hooks/useProjects";
 import { useServices } from "@/components/hooks/useServices";
 import { useSkills } from "@/components/hooks/useSkills";
+import { useTimeline } from "@/components/hooks/useTimeline";
+import Testimonials from "@/components/Testimonials";
+import FeedbackForm from "@/components/FeedbackForm";
 
 const skillGroups = [
   { value: "mastered", label: "Mastered" },
@@ -16,11 +19,16 @@ const skillGroups = [
 
 export default function HomePage() {
   const { profile, loading } = useProfile();
-  const { projects: featuredProjects, loading: projectsLoading } = useProjects();
+  const { projects: allProjects, loading: projectsLoading } = useProjects();
   const { services, loading: servicesLoading } = useServices();
   const { skills, loading: skillsLoading } = useSkills();
+  const { items: timelineItems, loading: timelineLoading } = useTimeline();
 
+  const publishedProjects = allProjects.filter((project) => project.published !== false);
+  const highlightedProjects = publishedProjects.filter((project) => project.featured);
+  const featuredProjects = (highlightedProjects.length ? highlightedProjects : publishedProjects).slice(0, 3);
   const focusServices = services.slice(0, 3);
+  const focusSkills = skills.filter((skill) => skill.level === 'mastered').slice(0, 3);
   const displayedSkillGroups = skillGroups
     .map((group) => ({
       ...group,
@@ -42,12 +50,12 @@ export default function HomePage() {
 
         <div className="relative mx-auto grid max-w-6xl gap-12 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:px-8 lg:pb-24 lg:pt-16">
           <div className="flex flex-col justify-center">
-            <span className="brand-label mb-6">{loading ? 'FULL STACK DEVELOPER' : profile.role?.toUpperCase() || 'FULL STACK DEVELOPER'}</span>
+            <span className="brand-label mb-6">{loading ? 'CARREGANDO PERFIL' : profile.role?.toUpperCase() || 'PERFIL PROFISSIONAL'}</span>
             <h1 className="brand-heading max-w-xl text-5xl leading-[0.95] tracking-[-0.07em] text-[var(--text-primary)] sm:text-6xl lg:text-7xl">
-              {loading ? 'Construo software para resolver problemas reais.' : profile.summary || 'Construo software para resolver problemas reais.'}
+              {loading ? 'Carregando apresentação...' : profile.summary || profile.name || 'Configure o perfil pelo painel administrativo.'}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--text-secondary)]">
-              {loading ? 'Sou Matondo Domingos Bunga, desenvolvedor Full Stack com foco em engenharia backend e desenvolvimento mobile com Flutter. Gosto de transformar problemas concretos em soluções digitais bem estruturadas.' : profile.about || 'Sou um desenvolvedor focado em soluções digitais bem estruturadas e com impacto real.'}
+              {loading ? 'Carregando informações do perfil...' : profile.about || 'Adicione uma apresentação no painel administrativo para exibi-la aqui.'}
             </p>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -55,18 +63,16 @@ export default function HomePage() {
                 Explorar projetos
                 <ArrowRight size={16} />
               </Link>
-              <a href={profile.socialLinks?.linkedin || 'https://www.linkedin.com'} target="_blank" rel="noreferrer" className="brand-button-secondary gap-2">
-                Entrar em contacto
-              </a>
+              {!loading && profile.email && <a href={`mailto:${profile.email}`} className="brand-button-secondary gap-2">Entrar em contacto</a>}
             </div>
 
             <div className="mt-8 flex items-center gap-4">
-              <a href={profile.socialLinks?.github || 'https://github.com'} target="_blank" rel="noreferrer" className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)] transition hover:border-[var(--accent)] hover:text-[var(--accent-text)]" aria-label="GitHub">
+              {!loading && profile.socialLinks?.github && <a href={profile.socialLinks.github} target="_blank" rel="noreferrer" className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)] transition hover:border-[var(--accent)] hover:text-[var(--accent-text)]" aria-label="GitHub">
                 <ArrowUpRight size={18} />
-              </a>
-              <a href={profile.socialLinks?.linkedin || 'https://www.linkedin.com'} target="_blank" rel="noreferrer" className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)] transition hover:border-[var(--accent)] hover:text-[var(--accent-text)]" aria-label="LinkedIn">
+              </a>}
+              {!loading && profile.socialLinks?.linkedin && <a href={profile.socialLinks.linkedin} target="_blank" rel="noreferrer" className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)] transition hover:border-[var(--accent)] hover:text-[var(--accent-text)]" aria-label="LinkedIn">
                 <ArrowUpRight size={18} />
-              </a>
+              </a>}
             </div>
           </div>
 
@@ -75,17 +81,15 @@ export default function HomePage() {
               <div className="absolute inset-x-8 top-0 h-32 rounded-b-[28px] bg-[var(--accent)]/15 blur-2xl" aria-hidden="true" />
               <div className="relative rounded-[24px] border border-[var(--border)] bg-[var(--surface-strong)] p-4">
                 <img
-                  src={profile.photo || '/foto.jpg'}
-                  alt={profile.name || 'Perfil'}
+                  src={!loading && profile.photo ? profile.photo : '/foto.jpg'}
+                  alt={!loading && profile.name ? profile.name : 'Foto de perfil'}
                   className="h-[420px] w-full rounded-[18px] object-cover"
                 />
               </div>
               <div className="absolute -bottom-6 left-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[var(--shadow-soft)]">
                 <p className="brand-label mb-2">FOCO</p>
                 <div className="space-y-2 text-sm text-[var(--text-secondary)]">
-                  <div>• Backend & APIs</div>
-                  <div>• Flutter & mobile</div>
-                  <div>• Product engineering</div>
+                  {focusSkills.map((skill) => <div key={skill._id ?? skill.name}>• {skill.name}</div>)}
                 </div>
               </div>
             </div>
@@ -95,14 +99,12 @@ export default function HomePage() {
 
       <section className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="grid gap-4 md:grid-cols-3">
-          {(servicesLoading && services.length === 0 ? [
-            ["Backend & APIs", "Sistemas robustos, integrações e regras de negócio bem estruturadas."],
-            ["Mobile com Flutter", "Experiência em interfaces de produto, UX funcional e comunicação com serviços backend."],
-            ["Product engineering", "Pensamento orientado a problema, clareza técnica e entrega prática."],
-          ] : focusServices.map((service) => [service.title, service.description])).map(([title, text]) => (
-            <div key={title} className="brand-card p-5">
-              <p className="brand-label mb-3">{title}</p>
-              <p className="text-sm leading-7 text-[var(--text-secondary)]">{text}</p>
+          {servicesLoading ? Array.from({ length: 3 }, (_, index) => (
+            <div key={`service-skeleton-${index}`} className="brand-card h-32 animate-pulse bg-[var(--surface-strong)]" />
+          )) : focusServices.map((service) => (
+            <div key={service._id ?? service.title} className="brand-card p-5">
+              <p className="brand-label mb-3">{service.title}</p>
+              <p className="text-sm leading-7 text-[var(--text-secondary)]">{service.description}</p>
             </div>
           ))}
         </div>
@@ -121,11 +123,9 @@ export default function HomePage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          {(projectsLoading && featuredProjects.length === 0 ? [
-            { id: 'loading-1', title: 'Projeto em destaque', description: 'Carregando dados do portfólio...', status: 'production', technologies: ['Next.js', 'TypeScript'] },
-            { id: 'loading-2', title: 'Projeto em destaque', description: 'Carregando dados do portfólio...', status: 'production', technologies: ['React', 'Node.js'] },
-            { id: 'loading-3', title: 'Projeto em destaque', description: 'Carregando dados do portfólio...', status: 'production', technologies: ['Flutter', 'MongoDB'] },
-          ] : featuredProjects.slice(0, 3)).map((project) => (
+          {projectsLoading ? Array.from({ length: 3 }, (_, index) => (
+            <div key={`project-skeleton-${index}`} className="brand-card h-72 animate-pulse bg-[var(--surface-strong)]" />
+          )) : featuredProjects.map((project) => (
             <article key={project.id ?? project._id ?? project.title} className="brand-card overflow-hidden">
               <div className="border-b border-[var(--border)] bg-[var(--surface-strong)] p-4">
                 <span className="brand-label">{project.status}</span>
@@ -163,18 +163,15 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="mb-10">
             <p className="brand-label">COMPETÊNCIAS</p>
-            <h2 className="brand-heading mt-3 text-4xl sm:text-5xl">Competência construída com código real.</h2>
+            <h2 className="brand-heading mt-3 text-4xl sm:text-5xl">Competências profissionais.</h2>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            {(skillsLoading && skills.length === 0 ? [
-              { title: "Backend e APIs", items: ["Node.js", "NestJS", "REST APIs", "PostgreSQL", "Prisma ORM"] },
-              { title: "Desenvolvimento mobile", items: ["Flutter", "Arquitetura mobile", "UI patterns", "Integração API"] },
-              { title: "Full Stack", items: ["Next.js", "React", "TypeScript", "TailwindCSS", "Product engineering"] },
-              { title: "Bases de dados e ferramentas", items: ["MongoDB", "PostgreSQL", "GitHub", "Docker", "Observabilidade"] },
-            ] : displayedSkillGroups.map((group) => ({ title: group.label, items: group.items }))).map((group) => (
-              <div key={group.title} className="brand-card p-5">
-                <h3 className="mb-4 text-lg font-semibold text-[var(--text-primary)]">{group.title}</h3>
+            {skillsLoading ? Array.from({ length: 4 }, (_, index) => (
+              <div key={`skill-skeleton-${index}`} className="brand-card h-48 animate-pulse bg-[var(--surface-strong)]" />
+            )) : displayedSkillGroups.map((group) => (
+              <div key={group.value} className="brand-card p-5">
+                <h3 className="mb-4 text-lg font-semibold text-[var(--text-primary)]">{group.label}</h3>
                 <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
                   {group.items.map((item) => (
                     <li key={item} className="flex items-center gap-2">
@@ -193,43 +190,78 @@ export default function HomePage() {
         <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
           <div>
             <p className="brand-label">SOBRE</p>
-            <h2 className="brand-heading mt-3 text-4xl sm:text-5xl">Estrutura, execução e atenção ao detalhe.</h2>
+            <h2 className="brand-heading mt-3 text-4xl sm:text-5xl">{loading ? 'Carregando perfil...' : profile.role || 'Sobre'}</h2>
           </div>
           <div className="space-y-5 text-lg leading-8 text-[var(--text-secondary)]">
-            <p>
-              O meu percurso tem sido guiado pela construção de produtos digitais que realmente resolvem problemas — desde backends com regras de negócio complexas até interfaces que facilitam decisões e trabalho em equipa.
-            </p>
-            <p>
-              Hoje, trabalho na interseção entre engenharia de software, backend e experiência de produto, com foco em sistemas confiáveis, bem pensados e claros no uso.
-            </p>
+            {!loading && <p>{profile.about || 'Adicione sua trajetória e apresentação na área de Perfil do painel administrativo.'}</p>}
+            {!loading && (profile.location || profile.availability) && <p className="text-sm">{[profile.location, profile.availability].filter(Boolean).join(' · ')}</p>}
           </div>
         </div>
       </section>
+
+      {(timelineLoading || timelineItems.length > 0) && <section className="border-y border-[var(--border)] bg-[var(--surface)]">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
+          <p className="brand-label">TRAJETÓRIA</p>
+          <h2 className="brand-heading mt-3 text-4xl sm:text-5xl">Experiência e formação.</h2>
+          {timelineLoading ? <div className="mt-8 h-36 animate-pulse rounded-2xl bg-[var(--surface-strong)]" /> : (
+            <div className="mt-8 grid gap-6 md:grid-cols-2">
+              {(['experience', 'education'] as const).map((category) => {
+                const entries = timelineItems.filter((item) => (item.category || 'experience') === category);
+                if (entries.length === 0) return null;
+                return <div key={category} className="space-y-4">
+                  <h3 className="text-lg font-semibold text-[var(--text-primary)]">{category === 'experience' ? 'Experiência' : 'Formação'}</h3>
+                  {entries.map((item) => <article key={item._id ?? `${category}-${item.title}`} className="brand-card p-5">
+                    {item.date && <p className="brand-label">{item.date}</p>}
+                    <h4 className="mt-2 font-semibold text-[var(--text-primary)]">{item.title}</h4>
+                    {item.subtitle && <p className="mt-1 text-sm text-[var(--text-secondary)]">{item.subtitle}</p>}
+                    {item.content && <p className="mt-3 whitespace-pre-line text-sm leading-7 text-[var(--text-secondary)]">{item.content}</p>}
+                  </article>)}
+                </div>;
+              })}
+            </div>
+          )}
+        </div>
+      </section>}
+
+      <Testimonials />
+      <FeedbackForm />
 
       <section id="contact" className="mx-auto max-w-6xl px-4 pb-24 pt-4 sm:px-6 lg:px-8">
         <div className="brand-card p-8 md:p-10">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
               <p className="brand-label">CONTACTO</p>
-              <h2 className="brand-heading mt-3 text-4xl sm:text-5xl">Vamos construir algo útil.</h2>
+              <h2 className="brand-heading mt-3 text-4xl sm:text-5xl">{loading ? 'Carregando contato...' : profile.availability || 'Entre em contato'}</h2>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <a href={profile.socialLinks?.github || 'https://github.com'} target="_blank" rel="noreferrer" className="brand-card flex items-center justify-between p-4 transition hover:border-[var(--accent)]">
+              {!loading && profile.email && <a href={`mailto:${profile.email}`} className="brand-card flex items-center justify-between p-4 transition hover:border-[var(--accent)]">
                 <div>
-                  <p className="text-sm text-[var(--muted)]">GitHub</p>
-                  <p className="mt-1 font-medium text-[var(--text-primary)]">{profile.socialLinks?.github ? 'Perfil' : '/matondo11'}</p>
+                  <p className="text-sm text-[var(--muted)]">E-mail</p>
+                  <p className="mt-1 font-medium text-[var(--text-primary)]">{profile.email}</p>
                 </div>
                 <ArrowUpRight size={18} className="text-[var(--text-secondary)]" />
-              </a>
+              </a>}
 
-              <a href={profile.socialLinks?.linkedin || 'https://www.linkedin.com'} target="_blank" rel="noreferrer" className="brand-card flex items-center justify-between p-4 transition hover:border-[var(--accent)]">
+              {!loading && profile.whatsapp && <a href={`https://wa.me/${profile.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="brand-card flex items-center justify-between p-4 transition hover:border-[var(--accent)]">
                 <div>
-                  <p className="text-sm text-[var(--muted)]">LinkedIn</p>
-                  <p className="mt-1 font-medium text-[var(--text-primary)]">{profile.name || 'MDB'}</p>
+                  <p className="text-sm text-[var(--muted)]">WhatsApp</p>
+                  <p className="mt-1 font-medium text-[var(--text-primary)]">{profile.whatsapp}</p>
                 </div>
                 <ArrowUpRight size={18} className="text-[var(--text-secondary)]" />
-              </a>
+              </a>}
+              {!loading && profile.socialLinks?.github && <a href={profile.socialLinks.github} target="_blank" rel="noreferrer" className="brand-card flex items-center justify-between p-4 transition hover:border-[var(--accent)]">
+                <div><p className="text-sm text-[var(--muted)]">GitHub</p><p className="mt-1 font-medium text-[var(--text-primary)]">{profile.name || 'Perfil'}</p></div>
+                <ArrowUpRight size={18} className="text-[var(--text-secondary)]" />
+              </a>}
+              {!loading && profile.socialLinks?.linkedin && <a href={profile.socialLinks.linkedin} target="_blank" rel="noreferrer" className="brand-card flex items-center justify-between p-4 transition hover:border-[var(--accent)]">
+                <div><p className="text-sm text-[var(--muted)]">LinkedIn</p><p className="mt-1 font-medium text-[var(--text-primary)]">{profile.name || 'Perfil'}</p></div>
+                <ArrowUpRight size={18} className="text-[var(--text-secondary)]" />
+              </a>}
+              {!loading && profile.resumeUrl && <a href={profile.resumeUrl} target="_blank" rel="noreferrer" className="brand-card flex items-center justify-between p-4 transition hover:border-[var(--accent)]">
+                <div><p className="text-sm text-[var(--muted)]">Currículo</p><p className="mt-1 font-medium text-[var(--text-primary)]">Visualizar currículo</p></div>
+                <ArrowUpRight size={18} className="text-[var(--text-secondary)]" />
+              </a>}
             </div>
           </div>
         </div>

@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Project from '@/models/Project';
 import { getAllFeedback } from '@/lib/db';
+import { requireAuth } from '@/lib/auth';
 
 interface ActivityItem {
   id: string;
@@ -12,8 +13,13 @@ interface ActivityItem {
   icon: string;
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request);
+    if (!auth.ok) {
+      return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
+    }
+
     if (!process.env.MONGODB_URI) {
       // Fallback for development without database
       return NextResponse.json([]);

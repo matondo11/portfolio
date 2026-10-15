@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { incrementViews, getAllViews, getViews } from "@/lib/db";
+import { incrementViews, getViews } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,7 +13,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const count = incrementViews(projectId);
+    if (!process.env.MONGODB_URI) {
+      return NextResponse.json({ projectId, count: 0 }, { status: 200 });
+    }
+
+    const count = await incrementViews(projectId);
     return NextResponse.json({ projectId, count }, { status: 200 });
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
@@ -25,10 +29,12 @@ export async function GET(req: NextRequest) {
   const projectId = searchParams.get("projectId");
 
   if (projectId) {
-    const count = getViews(projectId);
+    if (!process.env.MONGODB_URI) {
+      return NextResponse.json({ projectId, count: 0 });
+    }
+    const count = await getViews(projectId);
     return NextResponse.json({ projectId, count });
   }
 
-  const all = getAllViews();
-  return NextResponse.json({ views: all });
+  return NextResponse.json({ error: 'projectId é obrigatório' }, { status: 400 });
 }

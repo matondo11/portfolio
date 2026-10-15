@@ -12,6 +12,13 @@ interface Props {
 export default function AdminProjectForm({ initial = null, onCancel, onSaved }: Props) {
   const [title, setTitle] = useState(initial?.title || "");
   const [description, setDescription] = useState(initial?.description || "");
+  const [longDescription, setLongDescription] = useState(initial?.longDescription || "");
+  const [problem, setProblem] = useState(initial?.problem || "");
+  const [solution, setSolution] = useState(initial?.solution || "");
+  const [results, setResults] = useState((initial?.results || []).join("\n"));
+  const [figmaUrl, setFigmaUrl] = useState(initial?.figma || "");
+  const [videoUrl, setVideoUrl] = useState(initial?.video || "");
+  const [platform, setPlatform] = useState((initial?.platform || []).join(", "));
   const [technologies, setTechnologies] = useState((initial?.technologies || []).join(", "));
   const [liveUrl, setLiveUrl] = useState(initial?.liveUrl || "");
   const [githubUrl, setGithubUrl] = useState(initial?.githubUrl || "");
@@ -26,6 +33,13 @@ export default function AdminProjectForm({ initial = null, onCancel, onSaved }: 
   useEffect(() => {
     setTitle(initial?.title || "");
     setDescription(initial?.description || "");
+    setLongDescription(initial?.longDescription || "");
+    setProblem(initial?.problem || "");
+    setSolution(initial?.solution || "");
+    setResults((initial?.results || []).join("\n"));
+    setFigmaUrl(initial?.figma || "");
+    setVideoUrl(initial?.video || "");
+    setPlatform((initial?.platform || []).join(", "));
     setTechnologies((initial?.technologies || []).join(", "));
     setLiveUrl(initial?.liveUrl || "");
     setGithubUrl(initial?.githubUrl || "");
@@ -38,6 +52,13 @@ export default function AdminProjectForm({ initial = null, onCancel, onSaved }: 
   const buildPayload = () => ({
     title,
     description,
+    longDescription,
+    problem,
+    solution,
+    results: results.split("\n").map((item) => item.trim()).filter(Boolean),
+    figma: figmaUrl || undefined,
+    video: videoUrl || undefined,
+    platform: platform.split(",").map((item) => item.trim()).filter(Boolean),
     technologies: technologies.split(",").map((t) => t.trim()).filter(Boolean),
     image: imageUrl || undefined,
     liveUrl: liveUrl || undefined,
@@ -155,6 +176,25 @@ export default function AdminProjectForm({ initial = null, onCancel, onSaved }: 
 
           <div className="grid gap-4">
             <label className="block text-sm text-slate-300">
+              Descrição completa do case
+              <textarea value={longDescription} onChange={(e) => setLongDescription(e.target.value)} rows={5} className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-white outline-none transition focus:border-accent" />
+            </label>
+            <label className="block text-sm text-slate-300">
+              Problema
+              <textarea value={problem} onChange={(e) => setProblem(e.target.value)} rows={3} className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-white outline-none transition focus:border-accent" />
+            </label>
+            <label className="block text-sm text-slate-300">
+              Solução
+              <textarea value={solution} onChange={(e) => setSolution(e.target.value)} rows={3} className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-white outline-none transition focus:border-accent" />
+            </label>
+            <label className="block text-sm text-slate-300">
+              Resultados (um por linha)
+              <textarea value={results} onChange={(e) => setResults(e.target.value)} rows={4} className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-white outline-none transition focus:border-accent" />
+            </label>
+          </div>
+
+          <div className="grid gap-4">
+            <label className="block text-sm text-slate-300">
               Tecnologias
               <input
                 value={technologies}
@@ -194,6 +234,20 @@ export default function AdminProjectForm({ initial = null, onCancel, onSaved }: 
                 />
               </label>
             </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block text-sm text-slate-300">
+                Figma
+                <input value={figmaUrl} onChange={(e) => setFigmaUrl(e.target.value)} placeholder="https://figma.com/..." className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-white outline-none transition focus:border-accent" />
+              </label>
+              <label className="block text-sm text-slate-300">
+                Vídeo
+                <input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="URL do vídeo (opcional)" className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-white outline-none transition focus:border-accent" />
+              </label>
+            </div>
+            <label className="block text-sm text-slate-300">
+              Plataformas (separadas por vírgula)
+              <input value={platform} onChange={(e) => setPlatform(e.target.value)} placeholder="web, android, ios" className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-white outline-none transition focus:border-accent" />
+            </label>
           </div>
 
           {imageUrl && (

@@ -16,7 +16,10 @@ export default function FeedbackManager() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/feedback?all=true');
+      const token = localStorage.getItem('token');
+      const headers = new Headers();
+      if (token) headers.set('Authorization', `Bearer ${token}`);
+      const res = await fetch('/api/feedback?all=true', { headers });
       const data = await res.json();
       if (res.ok && Array.isArray(data.feedback)) {
         setFeedback(data.feedback);
@@ -32,9 +35,12 @@ export default function FeedbackManager() {
 
   const handleApprove = async (id: string, approved: boolean) => {
     try {
+      const token = localStorage.getItem('token');
+      const headers = new Headers({ 'Content-Type': 'application/json' });
+      if (token) headers.set('Authorization', `Bearer ${token}`);
       const res = await fetch(`/api/feedback/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ approved }),
       });
       if (!res.ok) throw new Error('Falha ao atualizar status');
@@ -47,7 +53,10 @@ export default function FeedbackManager() {
   const handleDelete = async (id: string) => {
     if (!confirm('Deseja excluir este depoimento?')) return;
     try {
-      const res = await fetch(`/api/feedback/${id}`, { method: 'DELETE' });
+      const token = localStorage.getItem('token');
+      const headers = new Headers();
+      if (token) headers.set('Authorization', `Bearer ${token}`);
+      const res = await fetch(`/api/feedback/${id}`, { method: 'DELETE', headers });
       if (!res.ok) throw new Error('Falha ao excluir depoimento');
       loadFeedback();
     } catch (err) {

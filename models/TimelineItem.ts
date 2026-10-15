@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ITimelineItem extends Document {
+  category: 'experience' | 'education';
   title: string;
   subtitle?: string;
   date?: string;
@@ -11,6 +12,7 @@ export interface ITimelineItem extends Document {
 
 const TimelineItemSchema: Schema = new Schema(
   {
+    category: { type: String, enum: ['experience', 'education'], default: 'experience', index: true },
     title: { type: String, required: true },
     subtitle: { type: String, default: '' },
     date: { type: String, default: '' },

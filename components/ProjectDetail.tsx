@@ -35,12 +35,12 @@ export default function ProjectDetail({ project }: Props) {
     fetch("/api/views", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ projectId: project.id }),
+      body: JSON.stringify({ projectId: project.id ?? project._id }),
     })
       .then((r) => r.json())
       .then((d) => setViews(typeof d?.count === "number" ? d.count : 0))
       .catch(() => {});
-  }, [project.id]);
+  }, [project.id, project._id]);
 
   return (
     <div className="min-h-screen bg-bg pt-24 pb-20 px-6">
@@ -112,7 +112,7 @@ export default function ProjectDetail({ project }: Props) {
         </div>
 
         {/* Tech stack */}
-        <div className="glass border border-border rounded-2xl p-6 mb-6">
+        {project.problem && <div className="glass border border-border rounded-2xl p-6 mb-6">
           <h2 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-4">
             <Wrench size={15} className="text-accent" />
             Tech Stack
@@ -127,16 +127,16 @@ export default function ProjectDetail({ project }: Props) {
               </span>
             ))}
           </div>
-        </div>
+        </div>}
 
         {/* Problem */}
-        <div className="glass border border-border rounded-2xl p-6 mb-6">
+        {project.solution && <div className="glass border border-border rounded-2xl p-6 mb-6">
           <h2 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-3">
             <Lightbulb size={15} className="text-amber-400" />
             The Problem
           </h2>
           <p className="text-text-secondary leading-relaxed">{project.problem}</p>
-        </div>
+        </div>}
 
         {/* Solution */}
         <div className="glass border border-border rounded-2xl p-6 mb-6">
@@ -148,7 +148,7 @@ export default function ProjectDetail({ project }: Props) {
         </div>
 
         {/* Results */}
-        <div className="glass border border-border rounded-2xl p-6">
+        {(project.results?.length ?? 0) > 0 && <div className="glass border border-border rounded-2xl p-6">
           <h2 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-4">
             <BarChart3 size={15} className="text-emerald-400" />
             Results & Impact
@@ -160,11 +160,8 @@ export default function ProjectDetail({ project }: Props) {
                 <span className="text-text-secondary text-sm leading-relaxed">{r}</span>
               </li>
             ))}
-            {!project.results?.length && (
-              <li className="text-text-secondary text-sm">Nenhum resultado disponível.</li>
-            )}
           </ul>
-        </div>
+        </div>}
       </div>
     </div>
   );

@@ -35,9 +35,12 @@ export default function ServiceForm({ initial = null, onSaved, onCancel }: Props
     try {
       const payload = { title, description, icon };
       const url = initial?._id ? `/api/services/${initial._id}` : '/api/services';
+      const token = localStorage.getItem('token');
+      const headers = new Headers({ 'Content-Type': 'application/json' });
+      if (token) headers.set('Authorization', `Bearer ${token}`);
       const res = await fetch(url, {
         method: mode === 'update' ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(payload),
       });
       const data = await res.json();

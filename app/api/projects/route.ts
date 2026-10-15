@@ -9,6 +9,13 @@ export async function GET(request: NextRequest) {
   try {
     const includeDrafts = request.nextUrl.searchParams.get('includeDrafts') === 'true';
 
+    if (includeDrafts) {
+      const auth = requireAuth(request);
+      if (!auth.ok) {
+        return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
+      }
+    }
+
     if (!process.env.MONGODB_URI) {
       return NextResponse.json(resolveProjectList(projectsData, includeDrafts));
     }

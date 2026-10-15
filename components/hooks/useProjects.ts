@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { Project } from '@/types';
-import { projects as defaultProjects } from '@/data/projects';
 
 export function useProjects() {
-  const [projects, setProjects] = useState<Project[]>(defaultProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,12 +31,12 @@ export function useProjects() {
             return;
           }
 
-          setProjects(defaultProjects);
+          setProjects([]);
         }
       } catch (err) {
         if (mounted) {
           setError((err as Error)?.message || 'Erro ao carregar projetos');
-          setProjects(defaultProjects);
+          setProjects([]);
         }
       } finally {
         if (mounted) {

@@ -1,37 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Profile from '@/models/Profile';
-import { verifyToken } from '@/lib/auth';
-
-function getTokenFromHeader(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader) return null;
-  const parts = authHeader.split(' ');
-  if (parts.length !== 2) return null;
-  return parts[1];
-}
+import { requireAuth } from '@/lib/auth';
 
 export async function GET() {
   try {
     if (!process.env.MONGODB_URI) {
       return NextResponse.json({
-        photo: '/foto.png',
-        banner: '/banner.png',
-        name: 'Nome do Desenvolvedor',
-        role: 'Full Stack Developer',
-        summary: 'Crie experiências digitais incríveis usando React e Next.js.',
-        about: 'Sou um desenvolvedor apaixonado por soluções escaláveis e interfaces elegantes.',
-        location: 'Luanda, Angola',
-        availability: 'Disponível para novos projetos',
-        email: 'contato@portfolio.com',
-        whatsapp: '+244 900 000 000',
-        resumeUrl: '/resume.pdf',
-        socialLinks: {
-          github: 'https://github.com',
-          linkedin: 'https://linkedin.com',
-          twitter: 'https://twitter.com',
-          website: 'https://portfolio.com',
-        },
+        photo: '', banner: '', name: '', role: '', summary: '', about: '',
+        location: '', availability: '', email: '', whatsapp: '', resumeUrl: '',
+        socialLinks: { github: '', linkedin: '', twitter: '', website: '' },
       });
     }
 
@@ -72,9 +50,9 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Database não configurado' }, { status: 500 });
     }
 
-    const token = getTokenFromHeader(request);
-    if (!token || !verifyToken(token)) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
+    const auth = requireAuth(request);
+    if (!auth.ok) {
+      return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
     }
 
     await dbConnect();

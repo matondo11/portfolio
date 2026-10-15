@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { Service } from '@/types';
-import { services as defaultServices } from '@/data/services';
 
 export function useServices() {
-  const [services, setServices] = useState<Service[]>(defaultServices);
+  const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +26,7 @@ export function useServices() {
       } catch (err) {
         if (mounted) {
           setError((err as Error)?.message || 'Erro ao carregar serviços');
-          setServices(defaultServices);
+          setServices([]);
         }
       } finally {
         if (mounted) {

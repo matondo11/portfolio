@@ -1,16 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAllFeedback, addFeedback } from "@/lib/db";
 import { FeedbackInput } from "@/types";
+import { requireAuth } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
+    const url = new URL(request.url);
+    const all = url.searchParams.get('all') === 'true';
+    if (all) {
+      const auth = requireAuth(request);
+      if (!auth.ok) {
+        return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
+      }
+    }
+
     if (!process.env.MONGODB_URI) {
-      // No DB configured — return empty feedback array for dev
       return NextResponse.json({ feedback: [] });
     }
 
-    const url = new URL(request.url);
-    const all = url.searchParams.get('all') === 'true';
     const feedback = await getAllFeedback(!all);
     return NextResponse.json({ feedback });
   } catch (err) {
@@ -23,7 +30,10 @@ export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as FeedbackInput;
 
-    const { name, rating, comment, role } = body;
+    const name = typeof body.name === 'string' ? body.name.trim() : '';
+    const comment = typeof body.comment === 'string' ? body.comment.trim() : '';
+    const role = typeof body.role === 'string' ? body.role.trim() : '';
+    const { rating } = body;
 
     if (!name || !comment || !role) {
       return NextResponse.json(
@@ -39,10 +49,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (name.length > 100 || role.length > 120 || comment.length > 2000) {
+      return NextResponse.json({ error: 'Os campos excedem o tamanho permitido' }, { status: 400 });
+    }
+
     if (!process.env.MONGODB_URI) {
-      // Can't persist without DB — return created-like response
-      const fake = { id: Date.now().toString(), name, rating, comment, role, createdAt: new Date().toISOString() };
-      return NextResponse.json({ feedback: fake }, { status: 201 });
+      return NextResponse.json({ error: 'Banco de dados não configurado' }, { status: 503 });
     }
 
     const entry = await addFeedback({ name, rating, comment, role });

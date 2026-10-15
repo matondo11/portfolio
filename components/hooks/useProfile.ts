@@ -4,22 +4,22 @@ import { useEffect, useState } from 'react';
 import { Profile } from '@/types';
 
 const defaultProfile: Profile = {
-  photo: '/foto.jpg',
-  banner: '/banner.jpg',
-  name: 'Full Stack Developer',
-  role: 'Full Stack Developer',
-  summary: 'Crie experiências digitais incríveis usando React e Next.js.',
-  about: 'Sou um desenvolvedor apaixonado por soluções escaláveis e interfaces elegantes.',
-  location: 'Luanda, Angola',
-  availability: 'Disponível para novos projetos',
-  email: 'contato@portfolio.com',
-  whatsapp: '+244 900 000 000',
-  resumeUrl: '/resume.pdf',
+  photo: '',
+  banner: '',
+  name: '',
+  role: '',
+  summary: '',
+  about: '',
+  location: '',
+  availability: '',
+  email: '',
+  whatsapp: '',
+  resumeUrl: '',
   socialLinks: {
-    github: 'https://github.com',
-    linkedin: 'https://linkedin.com',
-    twitter: 'https://twitter.com',
-    website: 'https://portfolio.com',
+    github: '',
+    linkedin: '',
+    twitter: '',
+    website: '',
   },
 };
 

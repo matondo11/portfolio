@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Project from '@/models/Project';
 import { getAllViews } from '@/lib/db';
+import { requireAuth } from '@/lib/auth';
 
 // Get month abbreviations
 const getMonthAbbreviation = (date: Date): string => {
@@ -25,8 +26,13 @@ const getLast12Months = (): { date: Date; label: string }[] => {
   return months;
 };
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = requireAuth(request);
+    if (!auth.ok) {
+      return NextResponse.json({ error: auth.error || 'Não autorizado' }, { status: 401 });
+    }
+
     if (!process.env.MONGODB_URI) {
       // Fallback for development without database
       return NextResponse.json({
