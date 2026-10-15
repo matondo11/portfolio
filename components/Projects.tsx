@@ -16,16 +16,19 @@ export default function Projects() {
         const res = await fetch('/api/projects');
         const data = await res.json();
         if (!mounted) return;
+
         if (Array.isArray(data)) {
-          setProjects(data);
-        } else if (data && Array.isArray((data as any).projects)) {
-          // some APIs return { projects: [...] }
-          setProjects((data as any).projects);
-        } else {
-          // defensive fallback
-          console.warn('Unexpected /api/projects response:', data);
-          setProjects([]);
+          setProjects(data as Project[]);
+          return;
         }
+
+        if (data && typeof data === 'object' && 'projects' in data && Array.isArray(data.projects)) {
+          setProjects(data.projects as Project[]);
+          return;
+        }
+
+        console.warn('Unexpected /api/projects response:', data);
+        setProjects([]);
       } catch (err) {
         console.error('Failed to load projects', err);
         setProjects([]);
@@ -49,7 +52,7 @@ export default function Projects() {
   );
 
   return (
-    <section className="py-20 px-4 max-w-6xl mx-auto">
+    <section id="projects" className="scroll-mt-24 py-20 px-4 max-w-6xl mx-auto">
       <motion.h2
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}

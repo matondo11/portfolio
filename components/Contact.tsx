@@ -25,7 +25,7 @@ export default function Contact() {
   };
 
   return (
-    <section className="py-20 px-4 max-w-2xl mx-auto">
+    <section id="contact" className="scroll-mt-24 py-20 px-4 max-w-2xl mx-auto">
       <motion.h2
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}

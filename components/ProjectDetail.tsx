@@ -28,7 +28,7 @@ interface Props {
 
 export default function ProjectDetail({ project }: Props) {
   const [views, setViews] = useState(0);
-  const status = statusConfig[project.status];
+  const status = statusConfig[project.status] ?? statusConfig.idea;
 
   useEffect(() => {
     // Increment + fetch view count
@@ -38,7 +38,7 @@ export default function ProjectDetail({ project }: Props) {
       body: JSON.stringify({ projectId: project.id }),
     })
       .then((r) => r.json())
-      .then((d) => setViews(d.count ?? 0))
+      .then((d) => setViews(typeof d?.count === "number" ? d.count : 0))
       .catch(() => {});
   }, [project.id]);
 
@@ -56,7 +56,7 @@ export default function ProjectDetail({ project }: Props) {
 
         {/* Header card */}
         <div className={clsx("relative rounded-2xl glass border border-border overflow-hidden mb-8")}>
-          <div className={clsx("h-1.5 w-full bg-gradient-to-r", project.gradient)} />
+          <div className={clsx("h-1.5 w-full bg-linear-to-r", project.gradient)} />
           <div className="p-8">
             <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
               <h1 className="text-3xl md:text-4xl font-bold text-text-primary">

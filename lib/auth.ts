@@ -27,3 +27,34 @@ export function verifyToken(token: string): any {
     return null;
   }
 }
+
+export function getBearerTokenFromRequest(request: Request | { headers?: Headers | Record<string, string> }): string | null {
+  const headers = request.headers;
+  const authHeader =
+    headers && typeof (headers as Headers).get === 'function'
+      ? (headers as Headers).get('authorization')
+      : (headers as Record<string, string> | undefined)?.authorization ??
+        (headers as Record<string, string> | undefined)?.Authorization ??
+        null;
+
+  if (!authHeader) return null;
+
+  const match = /^Bearer\s+(.+)$/i.exec(String(authHeader).trim());
+  return match ? match[1] : null;
+}
+
+export function requireAuth(request: Request): { ok: boolean; payload?: any; error?: string } {
+  const token = getBearerTokenFromRequest(request);
+
+  if (!token) {
+    return { ok: false, error: 'Não autorizado' };
+  }
+
+  const payload = verifyToken(token);
+
+  if (!payload) {
+    return { ok: false, error: 'Não autorizado' };
+  }
+
+  return { ok: true, payload };
+}

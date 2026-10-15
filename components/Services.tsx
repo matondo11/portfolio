@@ -2,26 +2,17 @@
 
 import { motion } from 'framer-motion';
 import { Code, Server, Palette } from 'lucide-react';
+import { useServices } from '@/components/hooks/useServices';
 
-const services = [
-  {
-    icon: <Code className="w-12 h-12" />,
-    title: 'Desenvolvimento Web',
-    description: 'Criação de aplicações web modernas e responsivas.',
-  },
-  {
-    icon: <Server className="w-12 h-12" />,
-    title: 'APIs Backend',
-    description: 'Desenvolvimento de APIs robustas e escaláveis.',
-  },
-  {
-    icon: <Palette className="w-12 h-12" />,
-    title: 'UI/UX',
-    description: 'Design de interfaces intuitivas e experiências excepcionais.',
-  },
-];
+const iconMap = {
+  Code,
+  Server,
+  Palette,
+};
 
 export default function Services() {
+  const { services, loading } = useServices();
+
   return (
     <section className="py-20 px-4 max-w-6xl mx-auto">
       <motion.h2
@@ -31,21 +22,36 @@ export default function Services() {
       >
         Serviços
       </motion.h2>
+
       <div className="grid md:grid-cols-3 gap-8">
-        {services.map((service, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.2 }}
-            className="bg-gray-800 p-6 rounded-lg text-center hover:bg-gray-700 transition-colors"
-          >
-            <div className="text-blue-400 mb-4 flex justify-center">{service.icon}</div>
-            <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-            <p>{service.description}</p>
-          </motion.div>
-        ))}
+        {loading
+          ? Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-72 rounded-2xl bg-gray-800/70 animate-pulse"
+              />
+            ))
+          : services.map((service, index) => {
+              const Icon = iconMap[(service.icon as keyof typeof iconMap) || 'Code'] || Code;
+
+              return (
+                <motion.div
+                  key={`${service.title}-${index}`}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2 }}
+                  className="bg-gray-800 p-6 rounded-lg text-center hover:bg-gray-700 transition-colors"
+                >
+                  <div className="text-blue-400 mb-4 flex justify-center">
+                    <Icon className="w-12 h-12" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
+                  <p>{service.description}</p>
+                </motion.div>
+              );
+            })}
       </div>
+
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}

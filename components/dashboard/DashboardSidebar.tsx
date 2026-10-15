@@ -10,6 +10,8 @@ import { useDashboard } from './DashboardContext';
 const navItems = [
   { label: 'Dashboard', href: '/admin', icon: '📊' },
   { label: 'Projetos', href: '/admin/projects', icon: '💼' },
+  { label: 'Skills', href: '/admin/skills', icon: '🧠' },
+  { label: 'Services', href: '/admin/services', icon: '🛠️' },
   { label: 'Feedbacks', href: '/admin/feedbacks', icon: '💬' },
   { label: 'Analytics', href: '/admin/analytics', icon: '📈' },
   { label: 'Uploads', href: '/admin/uploads', icon: '📁' },

@@ -17,6 +17,8 @@ export default function AdminProjectForm({ initial = null, onCancel, onSaved }: 
   const [githubUrl, setGithubUrl] = useState(initial?.githubUrl || "");
   const [imageUrl, setImageUrl] = useState(initial?.image || "");
   const [status, setStatus] = useState(initial?.status || "production");
+  const [featured, setFeatured] = useState(Boolean(initial?.featured));
+  const [published, setPublished] = useState(initial?.published ?? true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -29,6 +31,8 @@ export default function AdminProjectForm({ initial = null, onCancel, onSaved }: 
     setGithubUrl(initial?.githubUrl || "");
     setImageUrl(initial?.image || "");
     setStatus(initial?.status || "production");
+    setFeatured(Boolean(initial?.featured));
+    setPublished(initial?.published ?? true);
   }, [initial]);
 
   const buildPayload = () => ({
@@ -38,7 +42,11 @@ export default function AdminProjectForm({ initial = null, onCancel, onSaved }: 
     image: imageUrl || undefined,
     liveUrl: liveUrl || undefined,
     githubUrl: githubUrl || undefined,
+    demo: liveUrl || undefined,
+    github: githubUrl || undefined,
     status,
+    featured,
+    published,
   });
 
   async function handleSubmit(e: React.FormEvent) {
@@ -48,18 +56,23 @@ export default function AdminProjectForm({ initial = null, onCancel, onSaved }: 
     setSuccess(null);
     try {
       const payload = buildPayload();
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      const headers = new Headers({ "Content-Type": "application/json" });
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
       let res;
       if ((initial as any)?._id || (initial as any)?.id) {
         const id = (initial as any)._id || (initial as any).id;
         res = await fetch(`/api/projects/${id}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify(payload),
         });
       } else {
         res = await fetch(`/api/projects`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify(payload),
         });
       }
@@ -105,6 +118,27 @@ export default function AdminProjectForm({ initial = null, onCancel, onSaved }: 
                 <option value="in-progress">In Progress</option>
                 <option value="idea">Idea</option>
               </select>
+            </label>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="flex items-center gap-3 rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-sm text-slate-200">
+              <input
+                type="checkbox"
+                checked={featured}
+                onChange={(e) => setFeatured(e.target.checked)}
+                className="h-4 w-4 accent-violet-500"
+              />
+              Destacar no portfólio
+            </label>
+            <label className="flex items-center gap-3 rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-sm text-slate-200">
+              <input
+                type="checkbox"
+                checked={published}
+                onChange={(e) => setPublished(e.target.checked)}
+                className="h-4 w-4 accent-emerald-500"
+              />
+              Publicar imediatamente
             </label>
           </div>
 

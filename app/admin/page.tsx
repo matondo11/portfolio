@@ -40,7 +40,12 @@ export default function Admin() {
   const fetchProjects = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/projects');
+      const token = localStorage.getItem('token');
+      const headers = new Headers();
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      const res = await fetch('/api/projects', { headers });
       const data = await res.json();
       setProjects(Array.isArray(data) ? data : data.projects || []);
       notify({
@@ -67,7 +72,12 @@ export default function Admin() {
   } = useQuery<DashboardStats>({
     queryKey: ['dashboard', 'stats'],
     queryFn: async () => {
-      const res = await fetch('/api/dashboard/stats');
+      const token = localStorage.getItem('token');
+      const headers = new Headers();
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      const res = await fetch('/api/dashboard/stats', { headers });
       if (!res.ok) throw new Error('Failed to fetch stats');
       return res.json();
     },
@@ -83,7 +93,12 @@ export default function Admin() {
   } = useQuery<ProjectStats>({
     queryKey: ['dashboard', 'analytics'],
     queryFn: async () => {
-      const res = await fetch('/api/dashboard/analytics');
+      const token = localStorage.getItem('token');
+      const headers = new Headers();
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      const res = await fetch('/api/dashboard/analytics', { headers });
       if (!res.ok) throw new Error('Failed to fetch analytics');
       return res.json();
     },
@@ -98,7 +113,12 @@ export default function Admin() {
   } = useQuery<ActivityItem[]>({
     queryKey: ['dashboard', 'activity'],
     queryFn: async () => {
-      const res = await fetch('/api/dashboard/activity');
+      const token = localStorage.getItem('token');
+      const headers = new Headers();
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      const res = await fetch('/api/dashboard/activity', { headers });
       if (!res.ok) throw new Error('Failed to fetch activity');
       return res.json();
     },
@@ -189,7 +209,15 @@ export default function Admin() {
     if (!confirm('Tem certeza que deseja deletar este projeto?')) return;
 
     try {
-      const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
+      const token = localStorage.getItem('token');
+      const headers = new Headers();
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      const res = await fetch(`/api/projects/${id}`, {
+        method: 'DELETE',
+        headers,
+      });
       if (res.ok) {
         await fetchProjects();
         notify({

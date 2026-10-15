@@ -1,7 +1,11 @@
+'use client';
+
 import ProjectCard from '@/components/ProjectCard';
-import { projects } from '@/data/projects';
+import { useProjects } from '@/components/hooks/useProjects';
 
 export default function ProjectsPage() {
+  const { projects, loading } = useProjects();
+
   return (
     <main className="min-h-screen bg-gray-900 text-white pt-28">
       <div className="max-w-6xl mx-auto px-4 py-16">
@@ -13,15 +17,23 @@ export default function ProjectsPage() {
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={project.id ?? project._id ?? index}
-              project={project}
-              index={index}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="h-96 rounded-lg bg-gray-800/70 animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {projects.map((project, index) => (
+              <ProjectCard
+                key={project.id ?? project._id ?? index}
+                project={project}
+                index={index}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );

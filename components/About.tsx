@@ -1,8 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useProfile } from '@/components/hooks/useProfile';
 
 export default function About() {
+  const { profile, loading } = useProfile();
+
   return (
     <section className="py-20 px-4 max-w-4xl mx-auto">
       <motion.h2
@@ -19,12 +22,12 @@ export default function About() {
         className="text-lg leading-relaxed"
       >
         <p className="mb-6">
-          Sou um desenvolvedor Full Stack em crescimento, com foco em React, Next.js e Node.js.
-          Recentemente implementei autenticação com Google e estou aprendendo React Native.
-          Inspirado por Gustavo Guanabara, estudo cibersegurança através da Cisco Networking Academy.
+          {loading ? 'Carregando perfil...' : profile.about}
         </p>
         <p>
-          Apaixonado por criar soluções inovadoras e eficientes, sempre buscando aprender novas tecnologias.
+          {loading
+            ? 'Usando dados do seu perfil carregado do CMS.'
+            : 'Atualize essas informações no painel de administração para manter tudo atualizado sem editar código.'}
         </p>
       </motion.div>
     </section>

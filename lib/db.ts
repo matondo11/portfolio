@@ -45,15 +45,17 @@ async function dbConnect() {
 }
 
 // Feedback functions
-export async function getAllFeedback() {
+export async function getAllFeedback(approvedOnly = false) {
   await dbConnect();
-  const feedback = await Feedback.find().sort({ createdAt: -1 });
+  const query = approvedOnly ? { approved: true } : {};
+  const feedback = await Feedback.find(query).sort({ createdAt: -1 });
   return feedback.map(f => ({
     id: f._id.toString(),
     name: f.name,
     rating: f.rating,
     comment: f.comment,
     role: f.role,
+    approved: f.approved,
     createdAt: f.createdAt.toISOString(),
   }));
 }

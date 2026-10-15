@@ -58,6 +58,15 @@ export function DashboardStatsCards({ stats }: { stats: DashboardStats }) {
         changeLabel="vs mês passado"
         description="Mensagens recebidas"
       />
+
+      <StatCard
+        icon={Zap}
+        label="Feedbacks pendentes"
+        value={stats.feedbackPending}
+        change={2}
+        changeLabel="versus semana passada"
+        description="Aprovações pendentes"
+      />
     </motion.div>
   );
 }

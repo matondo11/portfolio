@@ -6,6 +6,7 @@ export interface DashboardStats {
   idea: number;
   viewsThisMonth: number;
   feedbackCount: number;
+  feedbackPending: number;
 }
 
 export interface ActivityItem {

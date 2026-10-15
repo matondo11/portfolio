@@ -7,6 +7,9 @@ import { SiNextdotjs, SiNestjs, SiTypescript } from "react-icons/si";
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
+// Coloca o currículo em public/resume.pdf e muda para "/resume.pdf" para voltar a mostrar o botão
+const RESUME_URL: string | null = null;
+
 
 const badges = [
   { name: "Next.js", icon: SiNextdotjs },
@@ -35,7 +38,7 @@ export default function Hero() {
         {/* Status badge */}
         <div className="inline-flex justify-center items-center gap-2 px-4 py-2 rounded-full glass border border-border/80 text-xs text-text-secondary mb-8 animate-fade-up">
           <span className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse" />
-          Available for freelance &amp; contracts
+           Available for freelance &amp; contracts
         </div>
 
 
@@ -109,7 +112,7 @@ export default function Hero() {
           style={{ animationDelay: "0.5s" }}
         >
           <a
-            href="https://github.com"
+            href="https://github.com/matondo11"
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 text-text-secondary hover:text-text-primary rounded-lg hover:bg-surface transition-colors"
@@ -118,7 +121,7 @@ export default function Hero() {
             <FaGithub size={20} />
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/matondodomingosbunga"
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 text-text-secondary hover:text-text-primary rounded-lg hover:bg-surface transition-colors"
@@ -126,8 +129,9 @@ export default function Hero() {
           >
             <FaLinkedin size={20} />
           </a>
+          {RESUME_URL && (
           <a
-            href="/resume.pdf"
+            href={RESUME_URL}
             download
             className="flex items-center gap-1.5 p-2 text-text-secondary hover:text-text-primary rounded-lg hover:bg-surface transition-colors text-sm"
             aria-label="Download Resume"
@@ -135,6 +139,7 @@ export default function Hero() {
             <Download size={16} />
             <span className="text-xs">Resume</span>
           </a>
+          )}
         </div>
       </div>
 
@@ -145,7 +150,7 @@ export default function Hero() {
         className=""
       >
         <Image
-          src="/foto.png"
+          src="public/foto.jpg"
           alt="Foto de perfil"
           width={400}
           height={400}

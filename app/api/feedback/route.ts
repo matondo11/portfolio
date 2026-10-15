@@ -2,14 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAllFeedback, addFeedback } from "@/lib/db";
 import { FeedbackInput } from "@/types";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     if (!process.env.MONGODB_URI) {
       // No DB configured — return empty feedback array for dev
       return NextResponse.json({ feedback: [] });
     }
 
-    const feedback = await getAllFeedback();
+    const url = new URL(request.url);
+    const all = url.searchParams.get('all') === 'true';
+    const feedback = await getAllFeedback(!all);
     return NextResponse.json({ feedback });
   } catch (err) {
     console.error('Failed to fetch feedback', err);

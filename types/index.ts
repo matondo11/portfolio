@@ -6,8 +6,19 @@ export type Platform = "web" | "ios" | "android";
 export type FilterTag = string;
 
 export interface Skill {
+  _id?: string;
   name: string;
   level: "mastered" | "learning" | "planned";
+  proficiency?: number;
+  createdAt?: string | Date;
+}
+
+export interface Service {
+  _id?: string;
+  title: string;
+  description: string;
+  icon: string;
+  createdAt?: string | Date;
 }
 
 export interface Project {
@@ -25,6 +36,7 @@ export interface Project {
   platform?: Platform[];
   status: ProjectStatus;
   featured?: boolean;
+  published?: boolean;
   createdAt?: Date;
   gradient?: string;
   longDescription?: string;
@@ -34,6 +46,26 @@ export interface Project {
   liveUrl?: string;
   filterTags?: string[];
   views?: number;
+}
+
+export interface Profile {
+  photo: string;
+  banner: string;
+  name: string;
+  role: string;
+  summary: string;
+  about: string;
+  location: string;
+  availability: string;
+  email: string;
+  whatsapp: string;
+  resumeUrl: string;
+  socialLinks: {
+    github?: string;
+    linkedin?: string;
+    twitter?: string;
+    website?: string;
+  };
 }
 
 // ─── User ─────────────────────────────────────────────────────────────────────
@@ -53,6 +85,7 @@ export interface Feedback {
   rating: number;
   comment: string;
   role: string;
+  approved?: boolean;
   createdAt: string;
 }
 

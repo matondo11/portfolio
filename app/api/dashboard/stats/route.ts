@@ -49,9 +49,10 @@ export async function GET() {
       return sum + (projectView?.count || 0);
     }, 0);
 
-    // Get feedback count
-    const feedback = await getAllFeedback();
+    // Get feedback stats
+    const feedback = await getAllFeedback(false);
     const feedbackCount = feedback.length;
+    const feedbackPending = feedback.filter((item) => !item.approved).length;
 
     return NextResponse.json({
       total,
@@ -60,6 +61,7 @@ export async function GET() {
       idea,
       viewsThisMonth,
       feedbackCount,
+      feedbackPending,
     });
   } catch (error) {
     console.error('GET /api/dashboard/stats error:', error);
